@@ -158,20 +158,55 @@ void applicate (C& lambdaCode, I parameterIter)
 }
 
 template <class C>
-C startRewritingLoop (C primalLambdaCode)
+C startRewritingLoop (C inputCode)
 {
-    for (typename C :: iterator parameterIter = findApplication (primalLambdaCode); parameterIter != primalLambdaCode.end();
-         parameterIter = findApplication (primalLambdaCode)) {
+    for (typename C :: iterator parameterIter = findApplication (inputCode); parameterIter != inputCode.end();
+         parameterIter = findApplication (inputCode)) {
         applicate (primalLambdaCode, parameterIter);
-        print ("output.ncfunc", primalLambdaCode, " ");
+        // print ("output.ncfunc", primalLambdaCode, " ");
     }
 
-    return primalLambdaCode;
+    return inputCode;
+}
+
+std::vector <std::string> compositeParser (std::string compositeCode)
+{
+    std::vector <std::string> outputCode;
+    for (char ch : compositeCode) {
+        if (ch == '(' || ch == ')') {
+            outputCode.push_back (std::string {ch});
+        }
+        else if (ch == '.') {
+            outputCode.back().push_back ('.');
+            outputCode.push_back ("");
+        }
+        else {
+            outputCode.back().push_back (ch);
+        }
+    }
+}
+
+std::vector <std::string> parser (std::vector <std::string> inputCode)
+{
+    std::vector <std::string> outputCode;
+    
+    for (std::string el : inputCode) {
+        if (el == "(" || el == ")") {
+            outputCode.push_back (el);
+        }
+        else if (el == ".") {
+            outputCode.back().append(el);
+        }
+        else if (el.find ("(") != std::string::npos || el.find(")") != std::string::npos || el.find (".") != std::string::npos) {
+            std::vector <std::string> compositeCode = compositeParser (el);
+            outputCode.insert (outputCode.end(), compositeCode.begin(), compositeCode.end());
+        }
+    }
 }
 
 int main ()
 {
-    std::vector <std::string> primalLambdaCode = writeIn ("test.cfunc");
+    std::vector <std::string> primalLambdaCode = parser (writeIn ("test.cfunc"));
     std::vector <std::string> incompleteLambdaCode = startRewritingLoop (primalLambdaCode);
     print ("output.ncfunc", incompleteLambdaCode, " ");
     return 0;
