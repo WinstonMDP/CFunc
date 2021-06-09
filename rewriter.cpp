@@ -9,14 +9,14 @@ std::vector <std::string> writeIn (std::string fileName)
 {
     std::ifstream fin (fileName);
 
-    std::vector <std::string> primalLambdaCode;
+    std::vector <std::string> LambdaCode;
     std::string string;
     while (!fin.eof()) {
         fin >> string;
-        primalLambdaCode.push_back (string);
+        LambdaCode.push_back (string);
     }
     
-    return primalLambdaCode;
+    return LambdaCode;
 }
 
 template <class C>
@@ -29,15 +29,15 @@ void print (std::string filename, C collection, std::string separator = " ")
 }
 
 template <class I>
-I closingBracket (I beginBracket)
+I closingBracket (I openingBracketIter)
 {
-    if (*beginBracket == "(") {
-        ++beginBracket;
+    if (*openingBracketIter == "(") {
+        ++openingBracketIter;
     }
-    long nOpenBrackets = 1;
 
+    long nOpenBrackets = 1;
     I iter;
-    for (iter = beginBracket; nOpenBrackets != 0; ++iter) {
+    for (iter = openingBracketIter; nOpenBrackets != 0; ++iter) {
         if (*iter == "(") {
             ++nOpenBrackets;
         }
@@ -51,24 +51,23 @@ I closingBracket (I beginBracket)
 }
 
 template <class I>
-I openingBracket (I iter)
+I openingBracketNear (I iter)
 {
     for ( ; *iter != "("; --iter)
     ;
     return iter;
 }
 
-std::vector <std::string> :: iterator findApplication (std::vector <std::string>& lambdaCode)
+template <class C>
+typename C :: iterator findApplication (C& lambdaCode)
 {
-    std::vector <std::string> :: iterator iter;
+    typename C :: iterator iter;
     for (iter = lambdaCode.begin(); iter != lambdaCode.end(); ++iter) {
-    std::vector <std::string> :: iterator argumentIter = closingBracket (iter) + 1;
-
+        typename C :: iterator argumentIter = closingBracket (iter) + 1;
         if ((*iter).back() == '.' && argumentIter != lambdaCode.end() && *argumentIter != ")") {
             return iter;
         }
     }
-
     return iter; // lambdaCode.end()
 }
 
@@ -89,64 +88,65 @@ C append ( const C& A, const C& B )
 	return AB;
 }
 
-std::vector <std::string> getArgument (std::vector <std::string>& lambdaCode, std::vector <std::string> :: iterator parameterIter)
+template <class C, class I>
+C getArgument (C& lambdaCode, I parameterIter)
 {
-    std::vector <std::string> :: iterator iter = closingBracket (parameterIter);
-    std::vector <std::string> argument;
+    C argument;
 
+    I iter = closingBracket (parameterIter);
     ++iter;
 
     static long nFunctionCalls = 0;
     ++nFunctionCalls;
     std::string prefixNumber = std::to_string (nFunctionCalls);
+    std::string prefix = append (prefixNumber, std::string {"-"});
 
     if (*iter == "(") {
-        std::vector <std::string> :: iterator beginIter = iter;
-        std::vector <std::string> :: iterator endIter = closingBracket (iter);
+        I beginIter = iter;
+        I endIter = closingBracket (iter);
 
         argument.push_back (*beginIter);
         ++iter;
-
-        
         for ( ; iter != endIter; ++iter) {
             if (*iter != "(" && *iter != ")") {
-                argument.push_back (append (prefixNumber, append (std::string {"-"}, *iter)));
+                argument.push_back (append (prefix, *iter));
             }
             else {
                 argument.push_back (*iter);
             }
         }
-
         argument.push_back (*endIter);
 
         lambdaCode.erase (beginIter, endIter + 1);
     }
     else {
-        argument.push_back (append (prefixNumber, append (std::string {"-"}, *iter)));
+        argument.push_back (append (prefix, *iter));
         lambdaCode.erase (iter);
     }
     return argument;
 }
 
-void deleteParameterBrackets (std::vector <std::string>& lambdaCode, std::vector <std::string> :: iterator& parameterIter)
+template <class C, class I>
+void deleteParameterBrackets (C& lambdaCode, I& parameterIter)
 {
     if ((*(parameterIter + 1)).back() != '.') {
-        lambdaCode.erase (openingBracket (parameterIter));
+        lambdaCode.erase (openingBracketNear (parameterIter));
         --parameterIter;
         lambdaCode.erase (closingBracket (parameterIter));
     } 
     lambdaCode.erase (parameterIter);
 }
 
-void applicate (std::vector <std::string>& lambdaCode, std::vector <std::string> :: iterator parameterIter)
+template <class C, class I>
+void applicate (C& lambdaCode, I parameterIter)
 {
     std::string parameter = pop_back (*parameterIter);
     std::string dotParameter = *parameterIter;
-    std::vector <std::string> argument = getArgument (lambdaCode, parameterIter);
+    C argument = getArgument (lambdaCode, parameterIter);
 
     deleteParameterBrackets (lambdaCode, parameterIter);
 
-    for (std::vector <std::string> :: iterator iter = parameterIter; iter != lambdaCode.end(); ++iter) {
+    for (I iter = parameterIter; iter != lambdaCode.end(); ++iter) {
         if (*iter == parameter) {
             lambdaCode.erase (iter);
             iter = lambdaCode.insert (iter, argument.begin(), argument.end());
@@ -157,9 +157,10 @@ void applicate (std::vector <std::string>& lambdaCode, std::vector <std::string>
     }
 }
 
-std::vector <std::string> startRewritingLoop (std::vector <std::string> primalLambdaCode)
+template <class C>
+C startRewritingLoop (C primalLambdaCode)
 {
-    for (std::vector <std::string> :: iterator parameterIter = findApplication (primalLambdaCode); parameterIter != primalLambdaCode.end();
+    for (typename C :: iterator parameterIter = findApplication (primalLambdaCode); parameterIter != primalLambdaCode.end();
          parameterIter = findApplication (primalLambdaCode)) {
         applicate (primalLambdaCode, parameterIter);
         print ("output.ncfunc", primalLambdaCode, " ");
