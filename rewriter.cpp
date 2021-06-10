@@ -195,9 +195,10 @@ std::vector <std::string> compositeParser (std::string compositeCode)
     return outputCode;
 }
 
-std::vector <std::string> parser (std::vector <std::string> inputCode)
+template <class C>
+C parser (C inputCode)
 {
-    std::vector <std::string> outputCode;
+    C outputCode;
     for (std::string el : inputCode) {
         if (el == "(" || el == ")") {
             outputCode.push_back (el);
@@ -206,7 +207,7 @@ std::vector <std::string> parser (std::vector <std::string> inputCode)
             outputCode.back().append(el);
         }
         else if (el.find ("(") != std::string::npos || el.find(")") != std::string::npos || el.find (".") != std::string::npos) {
-            std::vector <std::string> compositeCode = compositeParser (el);
+            C compositeCode = compositeParser (el);
             outputCode.insert (outputCode.end(), compositeCode.begin(), compositeCode.end());
         } 
         else {
