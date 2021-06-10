@@ -162,7 +162,7 @@ C startRewritingLoop (C inputCode)
 {
     for (typename C :: iterator parameterIter = findApplication (inputCode); parameterIter != inputCode.end();
          parameterIter = findApplication (inputCode)) {
-        applicate (primalLambdaCode, parameterIter);
+        applicate (inputCode, parameterIter);
         // print ("output.ncfunc", primalLambdaCode, " ");
     }
 
@@ -172,24 +172,32 @@ C startRewritingLoop (C inputCode)
 std::vector <std::string> compositeParser (std::string compositeCode)
 {
     std::vector <std::string> outputCode;
+    bool shouldSplit = false;
     for (char ch : compositeCode) {
         if (ch == '(' || ch == ')') {
             outputCode.push_back (std::string {ch});
+            shouldSplit = true;
         }
         else if (ch == '.') {
             outputCode.back().push_back ('.');
-            outputCode.push_back ("");
+            shouldSplit = true;
         }
         else {
-            outputCode.back().push_back (ch);
+            if (outputCode.size () == 0 || shouldSplit) {
+                outputCode.push_back (std::string {ch});
+                shouldSplit = false;
+            }
+            else {
+                outputCode.back().push_back (ch);
+            }
         }
     }
+    return outputCode;
 }
 
 std::vector <std::string> parser (std::vector <std::string> inputCode)
 {
     std::vector <std::string> outputCode;
-    
     for (std::string el : inputCode) {
         if (el == "(" || el == ")") {
             outputCode.push_back (el);
@@ -200,8 +208,12 @@ std::vector <std::string> parser (std::vector <std::string> inputCode)
         else if (el.find ("(") != std::string::npos || el.find(")") != std::string::npos || el.find (".") != std::string::npos) {
             std::vector <std::string> compositeCode = compositeParser (el);
             outputCode.insert (outputCode.end(), compositeCode.begin(), compositeCode.end());
+        } 
+        else {
+            outputCode.push_back (el);
         }
     }
+    return outputCode;
 }
 
 int main ()
