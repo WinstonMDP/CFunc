@@ -2,6 +2,24 @@
 #include <string>
 
 template <typename Element>
+class Iterator
+{
+	virtual void first() = 0;
+	virtual bool isDone() = 0;
+	virtual void next() = 0;
+	virtual Element current() = 0;
+};
+
+template <typename Element>
+class Collection
+{
+	public:
+	virtual Iterator <Element>* iterator() = 0;
+	virtual Collection <Element>* collectionWithNewElement (Element) = 0;
+	virtual void push (Element) = 0;
+};
+
+template <typename Element>
 class Array
 {
 };
@@ -35,6 +53,11 @@ class Map
 class Token
 {
 	public:
+	Token (std::string* type, std::string* value)
+	: _type {type}, _value {value}
+	{
+	}
+
 	std::string* type()
 	{
 		return _type;
@@ -48,6 +71,26 @@ class Token
 	private:
 	std::string* _type;
 	std::string* _value;
+};
+
+class Lexer
+{
+	public:
+	Collection <Token*>* tokens()
+	{
+		for (_wordsIterator->first(); !_wordsIterator->isDone(); _wordsIterator->next())
+		{
+			std::string* tokenValue = _wordsIterator->current();
+			std::string* tokenType = _typesMap->value (tokenValue);
+			_tokens->push (new Token (tokenType, tokenValue));
+		}
+		return _tokens;
+	}
+
+	private:
+	Iterator <std::string*>* _wordsIterator;
+	Map <std::string*, std::string*>* _typesMap;
+	Collection <Token*>* _tokens;
 };
 
 class AST //composite
