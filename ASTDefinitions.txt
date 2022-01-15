@@ -1,0 +1,7 @@
+definition = variable define function-body;
+function-body = something ';';
+value = variable ||
+		application ||
+		( something );
+application = variable variable;
+global-body = something;

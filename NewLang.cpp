@@ -2,21 +2,12 @@
 #include <string>
 
 template <typename Element>
-class Iterator
+class Iterator //iterator
 {
 	virtual void first() = 0;
 	virtual bool isDone() = 0;
 	virtual void next() = 0;
 	virtual Element current() = 0;
-};
-
-template <typename Element>
-class Collection
-{
-	public:
-	virtual Iterator <Element>* iterator() = 0;
-	virtual Collection <Element>* collectionWithNewElement (Element) = 0;
-	virtual void push (Element) = 0;
 };
 
 template <typename Element>
@@ -33,11 +24,33 @@ class Map
 		return _map.at (key);
 	}
 
+	template <typename OtherKey>
+	Value value (OtherKey key)
+	{
+	}
+
 	Map <Key, Value>* mapWithNewElement (Key key, Value value)
 	{
 		std::map <Key, Value>* newMap = new std::map <Key, Value> (_map);
 		newMap.at (key) = value;
 		return newMap;
+	}
+
+	void addElement (Key key, Value value)
+	{
+		_map.at (key) = value;
+	}
+
+	Map <Key, Value>* mapWithoutElement (Key key)
+	{
+		std::map <Key, Value>* newMap = new std::map <Key, Value> (_map);
+		newMap->erase (key);
+		return newMap;
+	}
+
+	void removeElement (Key key)
+	{
+		_map.erase (key);
 	}
 
 	Array <Key>* keys()
@@ -73,6 +86,7 @@ class Token
 	std::string* _value;
 };
 
+template <typename Collection>
 class Lexer
 {
 	public:
@@ -95,23 +109,68 @@ class Lexer
 
 class AST //composite
 {
+	using Children = Map <std::string*, AST*>;
+
 	public:
 	std::string* type()
 	{
 		return _type;
 	}
 
-	Map <std::string*, AST*>* children()
+	Children* children()
 	{
 		return _children;
 	}
 
-	Map <std::string*, AST*>* ASTWithNewChild (std::string* key, AST* newChild)
+	Children* ASTWithNewChild (AST* newChild)
 	{
-		return _children->mapWithNewElement (key, newChild);
+		return _children->mapWithNewElement (newChild->type(), newChild);
+	}
+
+	void addChild (AST* child)
+	{
+		_children->addElement (child->type(), child);
+	}
+
+	Children* ASTWithoutChild (AST* child)
+	{
+		return _children->mapWithoutElement (child->type());
+	}
+
+	void removeChild (AST* child)
+	{
+		_children->removeElement (child->type());
 	}
 	
 	private:
 	std::string* _type;
-	Map <std::string*, AST*>* _children;
+	Children* _children;
+};
+
+class ASTDefinition
+{
+};
+
+template <typename Collection>
+class Parser
+{
+	public:
+	AST* ast()
+	{
+		for (long segmentSize = 0; _uncompositeASTs->size() != 0; ++segmentSize) {
+			for (long leftIndex = 0; leftIndex < _unprocessedAST->size(); ++leftIndex) {
+				long rightIndex = leftIndex + segmentSize;
+				Array <AST*>* subunprocessedASTs = new Array <AST*> (_uncompositeASTs, leftIndex, rightIndex);
+				if (isInclude (_ASTDefinitions, subuncompositeASTs)) {
+					_uncompositeASTs.remove (leftIndex, rightIndex);
+					AST* newASTToComposeWithOther = new AST (_ASTDefinitions->value (subuncompositeASTs), subuncompositeASTs);
+					_uncompositeASTs.addElement (leftIndex, newASTToComposeWithOther);
+				}
+			}
+		}
+	}
+
+	private:
+	Array <AST*>* _uncompositeASTs;
+	Map <ASTDefinition*, std::string*>* _ASTDefinitions;
 };
