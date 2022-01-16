@@ -3,8 +3,8 @@
 
 template <typename Element>
 class Iterator //iterator
-{
-	virtual void first() = 0;
+{ 
+        virtual void first() = 0;
 	virtual bool isDone() = 0;
 	virtual void next() = 0;
 	virtual Element current() = 0;
@@ -27,6 +27,13 @@ class Map
 	template <typename OtherKey>
 	Value value (OtherKey key)
 	{
+                Array <Key>* mapKeys = keys();
+                for (Key mapKey : mapKeys) {
+                        if (key == mapKey) {
+                                return value (mapKey);
+                        }
+                }
+                throw "Map doesn`t have value for this key.";
 	}
 
 	Map <Key, Value>* mapWithNewElement (Key key, Value value)
@@ -53,7 +60,7 @@ class Map
 		_map.erase (key);
 	}
 
-	Array <Key>* keys()
+	Array <Key*>* keys()
 	{
 		return _keys;
 	}
@@ -96,7 +103,7 @@ class Lexer
 		{
 			std::string* tokenValue = _wordsIterator->current();
 			std::string* tokenType = _typesMap->value (tokenValue);
-			_tokens->push (new Token (tokenType, tokenValue));
+			_tokens->pushBack (new Token (tokenType, tokenValue));
 		}
 		return _tokens;
 	}
@@ -147,30 +154,82 @@ class AST //composite
 	Children* _children;
 };
 
+template <typename CollectionWithOrder>
 class ASTDefinition
 {
+        using Definition = CollectionWithOrder <std::string*>;
+        using Types = CollectionWithOrder <std::string*>;
+
+        public:
+        Definition* definition()
+        {
+                return _definition;
+        }
+
+        bool isEqual (CollectionWithOrder <AST*>* aSTs)
+        {
+                Types aSTTypes = types (aSTs);
+                Iterator* typesIterator = aSTTypes->iterator();
+                Iterator* definitionIterator = definition->iterator();
+                for (typesIterator->first(), definitionIterator->first(); !typesIterator->isDone() && !definitionIterator->isDone(); typesIterator->next()) {
+                        if (definitionIterator->current() == "something") {
+                                definitionIterator->next();
+                                Iterator* typeAfterSomethingIterator = something (typesIterator, definitionIterator->current());
+                                typesIterator = typeAfterSomethinIterator;
+                        }
+                        else if (definitionIterator->current() != typesIterator->current()) {
+                                return false;
+                        }
+                }
+                return true;
+        }
+
+        private:
+        Definition* _definition;
+
+        Types* types (CollectionWithOrder <AST*>* aSTs)
+        {
+                Types* typesToReturn = new Types;
+                for (AST* aST : aSTs) {
+                        typesToReturn->pushBack (aST->type());
+                }
+                return typesToReturn;
+        }
 };
 
-template <typename Collection>
+template <typename CollectionWithOrder>
+bool operator== (ASTDefinition* aSTDefinition, CollectionWithOrder* type)
+{
+        return aSTDefinition->isEqual (type);
+}
+
+template <typename CollectionWithOrder>
 class Parser
 {
 	public:
 	AST* ast()
 	{
-		for (long segmentSize = 0; _uncompositeASTs->size() != 0; ++segmentSize) {
+		for (long segmentSize = 0; segmentSize < _uncompositeASTs->size(); ++segmentSize) {
 			for (long leftIndex = 0; leftIndex < _unprocessedAST->size(); ++leftIndex) {
 				long rightIndex = leftIndex + segmentSize;
-				Array <AST*>* subunprocessedASTs = new Array <AST*> (_uncompositeASTs, leftIndex, rightIndex);
+				CollectionWithOrder <AST*>* subuncompositeASTs = new CollectionWithOrder <AST*> (_uncompositeASTs, leftIndex, rightIndex);
 				if (isInclude (_ASTDefinitions, subuncompositeASTs)) {
-					_uncompositeASTs.remove (leftIndex, rightIndex);
-					AST* newASTToComposeWithOther = new AST (_ASTDefinitions->value (subuncompositeASTs), subuncompositeASTs);
-					_uncompositeASTs.addElement (leftIndex, newASTToComposeWithOther);
+					AST* compositeASTToComposeWithOther = new AST (_ASTDefinitions->value (subuncompositeASTs), subuncompositeASTs);
+					replace (leftIndex, rightIndex, compositeASTToComposeWithOther);
 				}
 			}
 		}
+                AST* compositeAST = _uncompositeASTs.front();
+                return compositeAST;
 	}
 
 	private:
-	Array <AST*>* _uncompositeASTs;
+	CollectionWithOrder <AST*>* _uncompositeASTs;
 	Map <ASTDefinition*, std::string*>* _ASTDefinitions;
+
+	void replace(long leftIndex, long rightIndex, AST* insertElement)
+	{
+		_uncompositeASTs.remove (leftIndex, rightIndex);
+		_uncompositeASTs.addElement (leftIndex, insertElement);
+	}
 };
