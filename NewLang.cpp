@@ -2,6 +2,29 @@
 #include <string>
 
 template <typename Element>
+class Optional
+{
+	public:
+	Optional (Element element)
+	: _element {element}
+	{
+	}
+
+	bool doesExist()
+	{
+		return _element != nullptr;
+	}
+
+	Element element()
+	{
+		return _element;
+	}
+
+	private:
+	Element _element;
+}
+
+template <typename Element>
 class Iterator //iterator
 { 
         virtual void first() = 0;
@@ -19,21 +42,26 @@ template <typename Key, typename Value>
 class Map
 {
 	public:
-	Value value (Key key)
+	Optional <Value>* value (Key key)
 	{
-		return _map.at (key);
+		if (_map.count (key) != 0) {
+			return new Optional <Value> (_map.at (key));
+		}
+		else {
+			return new Optional <Value> (nullptr);
+		}
 	}
 
 	template <typename OtherKey>
-	Value value (OtherKey key)
+	Optional <Value>* value (OtherKey key)
 	{
                 Array <Key>* mapKeys = keys();
                 for (Key mapKey : mapKeys) {
                         if (key == mapKey) {
-                                return value (mapKey);
+                                return new Optional <Value> (value (mapKey));
                         }
                 }
-                throw "Map doesn`t have value for this key.";
+                return new Optional <Value> (nullptr);
 	}
 
 	Map <Key, Value>* mapWithNewElement (Key key, Value value)
@@ -172,16 +200,11 @@ class ASTDefinition
                 Iterator* typesIterator = aSTTypes->iterator();
                 Iterator* definitionIterator = definition->iterator();
                 for (typesIterator->first(), definitionIterator->first(); !typesIterator->isDone() && !definitionIterator->isDone(); typesIterator->next()) {
-                        if (definitionIterator->current() == "something") {
-                                definitionIterator->next();
-                                Iterator* typeAfterSomethingIterator = something (typesIterator, definitionIterator->current());
-                                typesIterator = typeAfterSomethinIterator;
-                        }
-                        else if (definitionIterator->current() != typesIterator->current()) {
+                        if (definitionIterator->current() != typesIterator->current()) {
                                 return false;
                         }
                 }
-                return true;
+		return typesIterator->isDone() && definitionIterator->isDone();
         }
 
         private:
@@ -209,27 +232,28 @@ class Parser
 	public:
 	AST* ast()
 	{
-		for (long segmentSize = 0; segmentSize < _uncompositeASTs->size(); ++segmentSize) {
-			for (long leftIndex = 0; leftIndex < _unprocessedAST->size(); ++leftIndex) {
+		for (long segmentSize = 0; segmentSize < _ASTs->size(); ++segmentSize) {
+			for (long leftIndex = 0; leftIndex < _ASTs->size(); ++leftIndex) {
 				long rightIndex = leftIndex + segmentSize;
-				CollectionWithOrder <AST*>* subuncompositeASTs = new CollectionWithOrder <AST*> (_uncompositeASTs, leftIndex, rightIndex);
-				if (isInclude (_ASTDefinitions, subuncompositeASTs)) {
-					AST* compositeASTToComposeWithOther = new AST (_ASTDefinitions->value (subuncompositeASTs), subuncompositeASTs);
-					replace (leftIndex, rightIndex, compositeASTToComposeWithOther);
+				CollectionWithOrder <AST*>* subASTs = new CollectionWithOrder <AST*> (_ASTs, leftIndex, rightIndex);
+				Optional <std::string*>* aSTType = _ASTDefinitions->value (subASTs);
+				if (aSTType->doesExist()) {
+					AST* aSTComposedFromOthers = new AST (aSTType->value(), subASTs);
+					replace (leftIndex, rightIndex, aSTComposedFromOthers);
 				}
 			}
 		}
-                AST* compositeAST = _uncompositeASTs.front();
+                AST* compositeAST = _ASTs.front();
                 return compositeAST;
 	}
 
 	private:
-	CollectionWithOrder <AST*>* _uncompositeASTs;
+	CollectionWithOrder <AST*>* _ASTs;
 	Map <ASTDefinition*, std::string*>* _ASTDefinitions;
 
 	void replace(long leftIndex, long rightIndex, AST* insertElement)
 	{
-		_uncompositeASTs.remove (leftIndex, rightIndex);
-		_uncompositeASTs.addElement (leftIndex, insertElement);
+		_ASTs.remove (leftIndex, rightIndex);
+		_ASTs.addElement (leftIndex, insertElement);
 	}
 };

@@ -1,7 +1,7 @@
-definition = variable define function-body;
-function-body = something ';';
+definition = variable define value end-definition-operator;
 value = variable ||
-		application ||
-		( something );
-application = variable variable;
-global-body = something;
+	lambda ||
+	application ||
+	opening-course-bracket value closing-course-bracket;
+lambda = variable lambda-abstraction-operator value;
+application = value value;
