@@ -5,7 +5,7 @@ SharedPointer<Value>::SharedPointer(Value* primitivePointer)
 : _primitivePointer {primitivePointer}
 {
     if (_primitivePointersCounts.count (_primitivePointer) == 0) {
-        long long* newPrimitivePointerCount = new long long (1);
+        long long* newPrimitivePointerCount = new long long(1);
         _primitivePointersCounts.insert (std::pair <Value*, long long*> (_primitivePointer, newPrimitivePointerCount));
         _primitivePointerCount = newPrimitivePointerCount;
     }

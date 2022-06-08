@@ -30,7 +30,10 @@ Lexer<CollectionWithOrder>::Lexer(
 	SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> tokenViewInCodeToNameMap,
 	SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator
 )
-: _tokenViewInCodeToNameMap {tokenViewInCodeToNameMap}, _codeWordsIterator {codeWordsIterator}
+: 
+	_tokenViewInCodeToNameMap {tokenViewInCodeToNameMap},
+ 	_codeWordsIterator {codeWordsIterator},
+ 	_tokens {new CollectionWithOrder<SharedPointer<Token>>()}
 {
 }
 
@@ -39,7 +42,7 @@ SharedPointer<CollectionWithOrder<SharedPointer<Token>>> Lexer<CollectionWithOrd
 {
 	for (_codeWordsIterator->first(); !_codeWordsIterator->isDone(); _codeWordsIterator->next()) {
 		SharedPointer<std::string> tokenViewInCode = _codeWordsIterator->current();
-		_tokens->add(new Token(_tokenViewInCodeToNameMap->value(tokenViewInCode)->value(), tokenViewInCode));
+		_tokens->add(new Token(value(_tokenViewInCodeToNameMap, tokenViewInCode)->value(), tokenViewInCode));
 	}
 	return _tokens;
 }

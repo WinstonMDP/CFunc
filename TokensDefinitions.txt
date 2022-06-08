@@ -1,7 +1,0 @@
-define = "=";
-lambda-abstraction-operator = ".";
-end-definition-operator = ";";
-opening-course-bracket = "(";
-closing-course-bracket = ")";
-compiler-validation-bracket = """;
-variable = other;
