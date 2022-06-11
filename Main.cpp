@@ -26,10 +26,10 @@ class CodeFile
 		}
 	}
 
-	SharedPointer<Collection<SharedPointer<std::string>>> words()
+	SharedPointer<DefaultArray<SharedPointer<std::string>>> words()
 	{
 		std::string word;
-		SharedPointer<Collection<SharedPointer<std::string>>> collection = new DefaultArray<SharedPointer<std::string>>;
+		SharedPointer<DefaultArray<SharedPointer<std::string>>> collection = new DefaultArray<SharedPointer<std::string>>;
 		while (*_fin >> word) {
 			collection = collection->collectionWithAddedElement(new std::string(word));
 		}
@@ -45,23 +45,11 @@ int main()
 {
 	try {
 		SharedPointer<TokenDefinitions> tokenDefinitions = new TokenDefinitions;
-		SharedPointer<Collection<SharedPointer<TokenDefinition>>> tokenDefinitionsCollection = tokenDefinitions->tokenDefinitionsCollection(); 
-		SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> tokenViewInCodeToNameMap =
-			new OrderedByValueMap<SharedPointer<TokenDefinition>, SharedPointer<std::string>>;
-		SharedPointer<Iterator<SharedPointer<TokenDefinition>>> tokenDefinitionsIterator = tokenDefinitionsCollection->iterator();
-		for (tokenDefinitionsIterator->first(); !tokenDefinitionsIterator->isDone(); tokenDefinitionsIterator->next()) {
-			tokenViewInCodeToNameMap = tokenViewInCodeToNameMap->collectionWithAddedElement(
-				new DefaultPair<SharedPointer<TokenDefinition>, SharedPointer<std::string>>(
-					tokenDefinitionsIterator->current(),
-					tokenDefinitionsIterator->current()->tokenName()
-				)
-			);
-		}
 		SharedPointer<CodeFile> codeFile = new CodeFile(new std::string("TestCode.cf"));
-		SharedPointer<Array<SharedPointer<std::string>>> codeWords = codeFile->words();
+		SharedPointer<DefaultArray<SharedPointer<std::string>>> codeWords = codeFile->words();
 		SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator = codeWords->iterator();
-		SharedPointer<Lexer<>> lexer = new Lexer<>(tokenViewInCodeToNameMap, codeWordsIterator);
-		SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
+		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<DefaultArray>(tokenDefinitions->tokenViewInCodeToNameMap(), codeWordsIterator);
+		SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens().primitivePointer();
 		print(tokens);
 	}
 	catch (SharedPointer<Exeption> exeption) {

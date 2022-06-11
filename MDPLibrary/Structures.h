@@ -17,8 +17,8 @@ template <typename Element>
 class Collection
 {
 	public:
-	virtual SharedPointer<Iterator<Element>> iterator() = 0;
-	virtual SharedPointer<Collection<Element>> collectionWithAddedElement(Element) = 0;
+	virtual Iterator<Element>* iterator() = 0;
+	virtual Collection<Element>* collectionWithAddedElement(Element) = 0;
 	virtual long size() = 0;
 };
 

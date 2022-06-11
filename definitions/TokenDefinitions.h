@@ -7,15 +7,17 @@
 
 #include "../MDPLibrary/SharedPointer.h"
 #include "../MDPLibrary/Structures.h"
+#include "../projectStructures/Map.h"
 
 class TokenDefinitions
 {
 	public:
 	TokenDefinitions();
-	SharedPointer<Collection<SharedPointer<TokenDefinition>>> tokenDefinitionsCollection();
+	Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* tokenViewInCodeToNameMap();
 
 	private:
 	SharedPointer<Collection<SharedPointer<TokenDefinition>>> _tokenDefinitionsCollection;
+	SharedPointer<OrderedByValueMap<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> _tokenViewInCodeToNameMap;
 };
 
 class DefaultTokenDefinition : public TokenDefinition

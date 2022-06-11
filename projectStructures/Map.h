@@ -26,12 +26,8 @@ class DefaultMap : public Map<Key, Value>
 {
 	public:
 	DefaultMap();
-	SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> iterator() override;
-
-	SharedPointer<Collection<SharedPointer<Pair<Key, Value>>>> collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) override;
-	template <template <typename> typename BaseClass>
-	SharedPointer<BaseClass<SharedPointer<Pair<Key, Value>>>> collectionWithAddedElement(SharedPointer<Pair<Key, Value>>);
-
+	Iterator<SharedPointer<Pair<Key, Value>>>* iterator() override;
+	DefaultMap<Key, Value>* collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) override;
 	long size() override;
 	SharedPointer<Optional<Value>> value(Key) override;
 	SharedPointer<Array<Key>> keys() override;
@@ -63,12 +59,8 @@ class OrderedByValueMap : public Map<Key, Value>
 {
 	public:
 	OrderedByValueMap();
-	SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> iterator() override;
-
-
-	SharedPointer<Collection<SharedPointer<Pair<Key, Value>>>> collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) override;
-	SharedPointer<OrderedByValueMap<Key, Value>> collectionWithAddedElement(SharedPointer<Pair<Key, Value>>);
-
+	Iterator<SharedPointer<Pair<Key, Value>>>* iterator() override;
+	OrderedByValueMap<Key, Value, OrderedCollection>* collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) override;
 	long size() override;
 	SharedPointer<Optional<Value>> value(Key) override;
 	SharedPointer<Array<Key>> keys() override;

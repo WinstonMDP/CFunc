@@ -12,7 +12,7 @@ class Array : public Collection<Element>
 {
 	public:
 	virtual Element elementAtIndex(long) = 0;
-	virtual SharedPointer<Array<Element>> arrayWithoutElementAtIndex(long) = 0;
+	virtual Array<Element>* arrayWithoutElementAtIndex(long) = 0;
 };
 
 template <typename Element>
@@ -25,17 +25,9 @@ class DefaultArray : public Array<Element>
 	DefaultArray(SharedPointer<std::vector<Element>>);
 	DefaultArray();
 	DefaultArray(std::initializer_list<Element>);
-
-	SharedPointer<Iterator<Element>> iterator() override;
-
-	SharedPointer<Collection<Element>> collectionWithAddedElement(Element) override;
-	template <template <typename> typename BaseClass>
-	SharedPointer<BaseClass<Element>> collectionWithAddedElement(Element);
-
-	SharedPointer<Array<Element>> arrayWithoutElementAtIndex(long) override;
-	template <template <typename> typename BaseClass>
-	SharedPointer<BaseClass<Element>> arrayWithoutElementAtIndex(long);
-
+	Iterator<Element>* iterator() override;
+	DefaultArray<Element>* collectionWithAddedElement(Element) override;
+	DefaultArray<Element>* arrayWithoutElementAtIndex(long) override;
 	long size() override;
 	Element elementAtIndex(long) override;
 

@@ -31,13 +31,12 @@ DefaultMap<Key, Value>::DefaultMap()
 }
 
 template <typename Key, typename Value>
-SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> DefaultMap<Key, Value>::iterator()
+Iterator<SharedPointer<Pair<Key, Value>>>* DefaultMap<Key, Value>::iterator()
 {
-
 }
 
 template <typename Key, typename Value>
-SharedPointer<Collection<SharedPointer<Pair<Key, Value>>>> DefaultMap<Key, Value>::collectionWithAddedElement(SharedPointer<Pair<Key, Value>> mapPair)
+DefaultMap<Key, Value>* DefaultMap<Key, Value>::collectionWithAddedElement(SharedPointer<Pair<Key, Value>> mapPair)
 {
 	SharedPointer<std::map<Key, Value>> mapToAddElement = new std::map<Key, Value>(*_map);
 	mapToAddElement->insert(std::pair<Key, Value> {mapPair->leftPart(), mapPair->rightPart()});
@@ -111,16 +110,16 @@ OrderedByValueMap<Key, Value, OrderedCollection>::OrderedByValueMap()
 }
 
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
-SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> OrderedByValueMap<Key, Value, OrderedCollection>::iterator()
+Iterator<SharedPointer<Pair<Key, Value>>>* OrderedByValueMap<Key, Value, OrderedCollection>::iterator()
 {
 	return new MapIterator<Key, Value>(this);
 }
 
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
-SharedPointer<Collection<SharedPointer<Pair<Key, Value>>>> 
+OrderedByValueMap<Key, Value, OrderedCollection>* 
 	OrderedByValueMap<Key, Value, OrderedCollection>::collectionWithAddedElement(SharedPointer<Pair<Key, Value>> mapPair)
 {
-	return new OrderedByValueMap<Key, Value, OrderedCollection>(_orderedCollection->collectionWithAddedElement<OrderedCollection>(mapPair));
+	return new OrderedByValueMap<Key, Value, OrderedCollection>(_orderedCollection->collectionWithAddedElement(mapPair));
 }
 
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
@@ -147,9 +146,9 @@ SharedPointer<Array<Key>> OrderedByValueMap<Key, Value, OrderedCollection>::keys
 	SharedPointer<DefaultArray<Key>> keysArray = new DefaultArray<Key>;
 	SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> orderedCollectionIterator = _orderedCollection->iterator();
 	for (orderedCollectionIterator->first(); !orderedCollectionIterator->isDone(); orderedCollectionIterator->next()) {
-		keysArray = (*keysArray).collectionWithAddedElement<DefaultArray>(orderedCollectionIterator->current()->leftElement());
+		keysArray = keysArray->collectionWithAddedElement(orderedCollectionIterator->current()->leftElement());
 	}
-	return keysArray;
+	return keysArray.primitivePointer();
 }
 
 template <typename Key, typename Value, template <typename> typename OrderedCollection>

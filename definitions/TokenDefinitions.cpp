@@ -1,5 +1,6 @@
 #include "TokenDefinitions.h"
 
+
 TokenDefinitions::TokenDefinitions()
 {
 	_tokenDefinitionsCollection = new DefaultArray<SharedPointer<TokenDefinition>> {
@@ -11,11 +12,21 @@ TokenDefinitions::TokenDefinitions()
 		new DefaultTokenDefinition(new std::string("compiler-validation-bracket"), new std::string("\"")),
 		new OtherTokenDefinition(new std::string("variable"))
 	};
+	_tokenViewInCodeToNameMap = new OrderedByValueMap<SharedPointer<TokenDefinition>, SharedPointer<std::string>>;
+	SharedPointer<Iterator<SharedPointer<TokenDefinition>>> tokenDefinitionsIterator = _tokenDefinitionsCollection->iterator();
+	for (tokenDefinitionsIterator->first(); !tokenDefinitionsIterator->isDone(); tokenDefinitionsIterator->next()) {
+		_tokenViewInCodeToNameMap = _tokenViewInCodeToNameMap->collectionWithAddedElement(
+			new DefaultPair<SharedPointer<TokenDefinition>, SharedPointer<std::string>>(
+				tokenDefinitionsIterator->current(),
+				tokenDefinitionsIterator->current()->tokenName()
+			)
+		);
+	}
 }
 
-SharedPointer<Collection<SharedPointer<TokenDefinition>>> TokenDefinitions::tokenDefinitionsCollection()
+Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* TokenDefinitions::tokenViewInCodeToNameMap()
 {
-	return _tokenDefinitionsCollection;
+	return _tokenViewInCodeToNameMap.primitivePointer();
 }
 
 DefaultTokenDefinition::DefaultTokenDefinition(SharedPointer<std::string> tokenName, SharedPointer<std::string> viewInCode)

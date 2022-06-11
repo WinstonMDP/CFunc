@@ -35,13 +35,13 @@ DefaultArray<Element>::DefaultArray(std::initializer_list<Element> initializer_l
 }
 
 template <typename Element>
-SharedPointer<Iterator<Element>> DefaultArray<Element>::iterator()
+Iterator<Element>* DefaultArray<Element>::iterator()
 {
 	return new ArrayIterator<Element>(this);
 }
 
 template <typename Element>
-SharedPointer<Collection<Element>> DefaultArray<Element>::collectionWithAddedElement(Element element)
+DefaultArray<Element>* DefaultArray<Element>::collectionWithAddedElement(Element element)
 {
 	SharedPointer<std::vector<Element>> vectorToAddElement = new std::vector<Element>(*_vector);
 	vectorToAddElement->push_back(element);
@@ -49,25 +49,7 @@ SharedPointer<Collection<Element>> DefaultArray<Element>::collectionWithAddedEle
 }
 
 template <typename Element>
-template <template <typename> typename BaseClass>
-SharedPointer<BaseClass<Element>> DefaultArray<Element>::collectionWithAddedElement(Element element)
-{
-	SharedPointer<std::vector<Element>> vectorToAddElement = new std::vector<Element>(*_vector);
-	vectorToAddElement->push_back(element);
-	return new DefaultArray<Element>(vectorToAddElement);
-}
-
-template <typename Element>
-SharedPointer<Array<Element>> DefaultArray<Element>::arrayWithoutElementAtIndex(long index)
-{
-	SharedPointer<std::vector<Element>> vectorToRemoveElement = new std::vector<Element>(*_vector);
-	vectorToRemoveElement->erase(vectorToRemoveElement->begin() + index);
-	return new DefaultArray<Element>(vectorToRemoveElement);
-}
-
-template <typename Element>
-template <template <typename> typename BaseClass>
-SharedPointer<BaseClass<Element>> DefaultArray<Element>::arrayWithoutElementAtIndex(long index)
+DefaultArray<Element>* DefaultArray<Element>::arrayWithoutElementAtIndex(long index)
 {
 	SharedPointer<std::vector<Element>> vectorToRemoveElement = new std::vector<Element>(*_vector);
 	vectorToRemoveElement->erase(vectorToRemoveElement->begin() + index);
