@@ -1,9 +1,12 @@
 #ifndef LEXER
 #define LEXER
 
-#include "MDPLibrary/SharedPointer.h"
-#include "Collections.h"
 #include <string>
+
+#include "projectStructures/Array.h"
+#include "projectStructures/Map.h"
+
+#include "MDPLibrary/SharedPointer.h"
 
 class Token
 {
@@ -17,6 +20,8 @@ class Token
 	SharedPointer<std::string> _viewInCode;
 };
 
+void print(SharedPointer<Token>, long depth = 0);
+
 class TokenDefinition
 {
 	public:
@@ -27,7 +32,9 @@ class TokenDefinition
 bool operator==(SharedPointer<TokenDefinition>, SharedPointer<std::string>);
 bool operator==(SharedPointer<std::string>, SharedPointer<TokenDefinition>);
 
-template <template <typename> typename CollectionWithOrder = Array>
+void print(SharedPointer<TokenDefinition>, long depth = 0);
+
+template <template <typename> typename OrderedCollection = DefaultArray>
 class Lexer
 {
 	public:
@@ -35,12 +42,12 @@ class Lexer
 		SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> tokenViewInCodeToNameMap,
 		SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator
 	);
-	SharedPointer<CollectionWithOrder<SharedPointer<Token>>> tokens();
+	SharedPointer<OrderedCollection<SharedPointer<Token>>> tokens();
 
 	private:
 	SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> _tokenViewInCodeToNameMap;
 	SharedPointer<Iterator<SharedPointer<std::string>>> _codeWordsIterator;
-	SharedPointer<CollectionWithOrder<SharedPointer<Token>>> _tokens;
+	SharedPointer<OrderedCollection<SharedPointer<Token>>> _tokens;
 };
 
 #include "Lexer.cpp"

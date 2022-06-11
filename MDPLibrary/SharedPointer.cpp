@@ -4,13 +4,13 @@ template <typename Value>
 SharedPointer<Value>::SharedPointer(Value* primitivePointer)
 : _primitivePointer {primitivePointer}
 {
-    if (_primitivePointersCounts.count (_primitivePointer) == 0) {
+    if (_primitivePointersCounts.count(_primitivePointer) == 0) {
         long long* newPrimitivePointerCount = new long long(1);
-        _primitivePointersCounts.insert (std::pair <Value*, long long*> (_primitivePointer, newPrimitivePointerCount));
+        _primitivePointersCounts.insert(std::pair<Value*, long long*>(_primitivePointer, newPrimitivePointerCount));
         _primitivePointerCount = newPrimitivePointerCount;
     }
     else {
-        _primitivePointerCount = _primitivePointersCounts.at (_primitivePointer);
+        _primitivePointerCount = _primitivePointersCounts.at(_primitivePointer);
         ++(*_primitivePointerCount);
     }
 }
@@ -40,13 +40,20 @@ SharedPointer<Value>& SharedPointer<Value>::operator=(const SharedPointer<Value>
     deleteMethod();
     _primitivePointer = sharedPointer.primitivePointer();
     if (_primitivePointer != nullptr) {
-        _primitivePointerCount = _primitivePointersCounts.at (_primitivePointer);
+        _primitivePointerCount = _primitivePointersCounts.at(_primitivePointer);
         ++(*_primitivePointerCount);
     }
     else {
         _primitivePointerCount = nullptr;
     }
     return *this;
+}
+
+template <typename Value>
+SharedPointer<Value>& SharedPointer<Value>::operator=(const std::nullptr_t& sharedPointer)
+{
+    throw "template <typename Value>:\n\
+SharedPointer<Value>& SharedPointer<Value>::operator=(const std::nullptr_t& sharedPointer)\nGet out with your nullptr.";
 }
 
 template <typename Value>
@@ -91,7 +98,7 @@ void SharedPointer<Value>::deleteMethod()
     if (_primitivePointer != nullptr) {
         --(*_primitivePointerCount);
         if (*_primitivePointerCount == 0) {
-            _primitivePointersCounts.erase (_primitivePointer);
+            _primitivePointersCounts.erase(_primitivePointer);
             delete _primitivePointer;
             delete _primitivePointerCount;
         }
@@ -99,4 +106,4 @@ void SharedPointer<Value>::deleteMethod()
 }
 
 template <class Value>
-std::map<Value*, long long*> SharedPointer <Value>::_primitivePointersCounts;
+std::map<Value*, long long*> SharedPointer<Value>::_primitivePointersCounts;

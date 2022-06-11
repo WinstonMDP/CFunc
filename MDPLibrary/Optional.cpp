@@ -15,9 +15,7 @@ Optional<Value>::Optional() // bad
 template <typename Value>
 Optional<Value>::Optional(std::nullptr_t)
 {
-	throw "template <typename Value> \
-		Optional<Value>::Optional(std::nullptr_t):\
-		Get out with your nullptr.";
+	throw "template <typename value> Optional<value>::Optional(std::nullptr_t):\nGet out with your nullptr.";
 }
 
 template <typename Value>
@@ -30,9 +28,7 @@ template <typename Value>
 Value Optional<Value>::value()
 {
 	if (!doesValueExist()) {
-		throw "template <typename Value> \
-			Value Optional<Value>::value(): \
-			Value does not exist.";
+		throw "template <typename Value>\nValue Optional<Value>::value():\nValue does not exist.";
 	}
 	return _value;
 }

@@ -12,6 +12,7 @@ class SharedPointer
 	SharedPointer();
 	SharedPointer(const SharedPointer&);
 	SharedPointer& operator=(const SharedPointer&);
+	SharedPointer& operator=(const std::nullptr_t&);
 	Value& operator*() const;
 	Value* operator->();
 	Value* primitivePointer() const;

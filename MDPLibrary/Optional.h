@@ -1,6 +1,8 @@
 #ifndef OPTIONAL
 #define OPTIONAL
 
+#include <cstddef>
+
 template <typename Value>
 class Optional
 {
