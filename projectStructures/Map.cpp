@@ -33,6 +33,7 @@ DefaultMap<Key, Value>::DefaultMap()
 template <typename Key, typename Value>
 Iterator<SharedPointer<Pair<Key, Value>>>* DefaultMap<Key, Value>::iterator()
 {
+	return new MapIterator<Key, Value>(this);
 }
 
 template <typename Key, typename Value>
@@ -143,7 +144,7 @@ SharedPointer<Optional<Value>> OrderedByValueMap<Key, Value, OrderedCollection>:
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
 SharedPointer<Array<Key>> OrderedByValueMap<Key, Value, OrderedCollection>::keys()
 {
-	SharedPointer<DefaultArray<Key>> keysArray = new DefaultArray<Key>;
+	SharedPointer<Array<Key>> keysArray = new DefaultArray<Key>;
 	SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> orderedCollectionIterator = _orderedCollection->iterator();
 	for (orderedCollectionIterator->first(); !orderedCollectionIterator->isDone(); orderedCollectionIterator->next()) {
 		keysArray = keysArray->collectionWithAddedElement(orderedCollectionIterator->current()->leftElement());

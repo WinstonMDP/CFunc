@@ -1,6 +1,5 @@
 #include "TokenDefinitions.h"
 
-
 TokenDefinitions::TokenDefinitions()
 {
 	_tokenDefinitionsCollection = new DefaultArray<SharedPointer<TokenDefinition>> {

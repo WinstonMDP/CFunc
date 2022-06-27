@@ -1,38 +1,25 @@
-class C;
+#include <iostream>
 
-class A {
-public:
-        C* outC() { return do_outC(); }
-        virtual C* do_outC() = 0;
+class B
+{
+    public:
+    B(char ch)
+    : _ch {ch}
+    {
+    }
+
+    char come()
+    {
+        return _ch;
+    }
+
+    private:
+    char _ch;
 };
 
-class C {
-public:
-        virtual A* outA() = 0;
-};
-
-
-class D;
-
-class B : public A {
-public:
-        D* outC();
-        virtual C* do_outC();
-};
-
-class D : public C {
-public:
-        B* outA();
-};
-
-D* B::outC() {
-        return static_cast<D*>(do_outC());
-}
-
-C* B::do_outC() {
-        return new D();
-}
-
-B* D::outA() {
-        return new B();
+int main()
+{
+    void* a = new B('1');
+    B* b = static_cast<B*>(a);
+    std::cout << b->come();
 }

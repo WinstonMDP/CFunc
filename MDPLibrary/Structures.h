@@ -11,6 +11,7 @@ class Iterator
 	virtual bool isDone() = 0;
 	virtual void next() = 0;
 	virtual Element current() = 0;
+	virtual ~Iterator() = default;
 };
 
 template <typename Element>
@@ -20,6 +21,7 @@ class Collection
 	virtual Iterator<Element>* iterator() = 0;
 	virtual Collection<Element>* collectionWithAddedElement(Element) = 0;
 	virtual long size() = 0;
+	virtual ~Collection() = default;
 };
 
 template <typename LeftElement, typename RightElement>
@@ -28,6 +30,7 @@ class Pair
 	public:
 	virtual LeftElement leftElement() = 0;
 	virtual RightElement rightElement() = 0;
+	virtual ~Pair() = default;
 };
 
 template <typename LeftElement, typename RightElement>

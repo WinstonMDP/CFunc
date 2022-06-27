@@ -27,6 +27,7 @@ class TokenDefinition
 	public:
 	virtual SharedPointer<std::string> tokenName() const = 0;
 	virtual bool isEqual(SharedPointer<std::string> viewInCode) = 0;
+	virtual ~TokenDefinition() = default;
 };
 
 bool operator==(SharedPointer<TokenDefinition>, SharedPointer<std::string>);

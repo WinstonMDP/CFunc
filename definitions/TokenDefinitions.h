@@ -17,7 +17,7 @@ class TokenDefinitions
 
 	private:
 	SharedPointer<Collection<SharedPointer<TokenDefinition>>> _tokenDefinitionsCollection;
-	SharedPointer<OrderedByValueMap<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> _tokenViewInCodeToNameMap;
+	SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> _tokenViewInCodeToNameMap;
 };
 
 class DefaultTokenDefinition : public TokenDefinition

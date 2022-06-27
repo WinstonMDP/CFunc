@@ -11,8 +11,10 @@ template <typename Element>
 class Array : public Collection<Element>
 {
 	public:
+	virtual Array<Element>* collectionWithAddedElement(Element) = 0;
 	virtual Element elementAtIndex(long) = 0;
 	virtual Array<Element>* arrayWithoutElementAtIndex(long) = 0;
+	virtual ~Array() {std::cout << "How" << '\n';};
 };
 
 template <typename Element>

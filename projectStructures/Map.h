@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include "Array.h"
+
 #include "../MDPLibrary/Optional.h"
 #include "../MDPLibrary/SharedPointer.h"
 #include "../MDPLibrary/Structures.h"
@@ -11,8 +13,10 @@ template <typename Key, typename Value>
 class Map : public Collection<SharedPointer<Pair<Key, Value>>>
 {
 	public:
+	virtual Map<Key, Value>* collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) = 0; 
 	virtual SharedPointer<Optional<Value>> value(Key) = 0;
 	virtual SharedPointer<Array<Key>> keys() = 0;
+	virtual ~Map() = default;
 };
 
 template <typename Value, typename Key, typename AnyKey>

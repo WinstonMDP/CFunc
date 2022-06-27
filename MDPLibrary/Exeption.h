@@ -8,6 +8,7 @@ class Traceback
 {
 	public:
 	virtual void print() = 0;
+	virtual ~Traceback() = default;
 };
 
 class DefaultTraceback : public Traceback
@@ -24,6 +25,7 @@ class Description
 {
 	public:
 	virtual void print() = 0;
+	virtual ~Description() = default;
 };
 
 class DefaultDescription : public Description
@@ -43,6 +45,7 @@ class Exeption
 	virtual SharedPointer<Traceback> traceback() = 0;
 	virtual SharedPointer<Description> description() = 0;
 	virtual SharedPointer<Optional<SharedPointer<Exeption>>> lowerExeption() = 0;
+	virtual ~Exeption() = default;
 };
 
 class DefaultExeption : public Exeption
