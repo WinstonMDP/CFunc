@@ -46,12 +46,9 @@ int main()
 		SharedPointer<TokenDefinitions> tokenDefinitions = new TokenDefinitions;
 		SharedPointer<CodeFile> codeFile = new CodeFile(new std::string("TestCode.cf"));
 		SharedPointer<Array<SharedPointer<std::string>>> codeWords = codeFile->words();
-		print(codeWords);
 		SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator = codeWords->iterator();
-		print(SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>>(tokenDefinitions->tokenViewInCodeToNameMap()));
 		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<DefaultArray>(tokenDefinitions->tokenViewInCodeToNameMap(), codeWordsIterator);
 		SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
-		print(tokens);
 	}
 	catch (SharedPointer<Exeption> exeption) {
 		exeption->baseProcess();
