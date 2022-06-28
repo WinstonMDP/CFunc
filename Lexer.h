@@ -10,13 +10,13 @@
 class Token
 {
 	public:
-	Token(SharedPointer<std::string> name, SharedPointer<std::string> viewInCode);
+	Token(SharedPointer<std::string> name, SharedPointer<std::string> lexeme);
 	SharedPointer<std::string> name();
-	SharedPointer<std::string> viewInCode();
+	SharedPointer<std::string> lexeme();
 
 	private:
 	SharedPointer<std::string> _name;
-	SharedPointer<std::string> _viewInCode;
+	SharedPointer<std::string> _lexeme;
 };
 
 void print(SharedPointer<Token>, long depth = 0);
@@ -25,7 +25,7 @@ class TokenDefinition
 {
 	public:
 	virtual SharedPointer<std::string> tokenName() const = 0;
-	virtual bool isEqual(SharedPointer<std::string> viewInCode) = 0;
+	virtual bool isEqual(SharedPointer<std::string> lexeme) = 0;
 	virtual ~TokenDefinition() = default;
 };
 
@@ -40,7 +40,7 @@ class Lexer
 {
 	public:
 	Lexer(
-		SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> tokenViewInCodeToNameMap,
+		SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> lexemeToTokenNameMap,
 		SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator
 	);
 	SharedPointer<OrderedCollection<SharedPointer<Token>>> tokens();

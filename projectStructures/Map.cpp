@@ -5,8 +5,8 @@ SharedPointer<Optional<Value>> value(SharedPointer<Map<Key, Value>> map, AnyKey 
 {
 	SharedPointer<Array<Key>> mapKeys = map->keys();
 	for (SharedPointer<Iterator<Key>> mapKeysIterator = mapKeys->iterator(); !mapKeysIterator->isDone(); mapKeysIterator->next()) {
-		if (key == mapKeysIterator->current()) {
-			return new Optional<Value>(map->value(mapKeysIterator->current())->value());
+		if (key == mapKeysIterator->currentElement()) {
+			return new Optional<Value>(map->value(mapKeysIterator->currentElement())->value());
 		}
 	}
 	return new Optional<Value>;
@@ -18,8 +18,8 @@ void print(SharedPointer<Map<Key, Value>> map, long depth)
 	SharedPointer<Iterator<Key>> mapKeysIterator = map->keys()->iterator();
 	print("Map<Key, Value> {", depth);
 	for (mapKeysIterator->first(); !mapKeysIterator->isDone(); mapKeysIterator->next()) {
-		print(mapKeysIterator->current(), depth + 1);
-		print(map->value(mapKeysIterator->current())->value(), depth + 1);
+		print(mapKeysIterator->currentElement(), depth + 1);
+		print(map->value(mapKeysIterator->currentElement())->value(), depth + 1);
 	}
 	print("}", depth);
 }
@@ -92,9 +92,9 @@ void MapIterator<Key, Value>::next()
 }
 
 template <typename Key, typename Value>
-SharedPointer<Pair<Key, Value>> MapIterator<Key, Value>::current()
+SharedPointer<Pair<Key, Value>> MapIterator<Key, Value>::currentElement()
 {
-	Key currentKey = _keysIterator->current();
+	Key currentKey = _keysIterator->currentElement();
 	return new DefaultPair<Key, Value>(currentKey, value(_map, currentKey)->value());
 }
 
@@ -134,8 +134,8 @@ SharedPointer<Optional<Value>> OrderedByValueMap<Key, Value, OrderedCollection>:
 {
 	SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> orderedCollectionIterator = _orderedCollection->iterator();
 	for (orderedCollectionIterator->first(); !orderedCollectionIterator->isDone(); orderedCollectionIterator->next()) {
-		if (orderedCollectionIterator->current()->leftElement() == key) {
-			return new Optional<Value>(orderedCollectionIterator->current()->rightElement());
+		if (orderedCollectionIterator->currentElement()->leftElement() == key) {
+			return new Optional<Value>(orderedCollectionIterator->currentElement()->rightElement());
 		}
 	}
 	return new Optional<Value>;
@@ -147,7 +147,7 @@ SharedPointer<Array<Key>> OrderedByValueMap<Key, Value, OrderedCollection>::keys
 	SharedPointer<Array<Key>> keysArray = new DefaultArray<Key>;
 	SharedPointer<Iterator<SharedPointer<Pair<Key, Value>>>> orderedCollectionIterator = _orderedCollection->iterator();
 	for (orderedCollectionIterator->first(); !orderedCollectionIterator->isDone(); orderedCollectionIterator->next()) {
-		keysArray = keysArray->collectionWithAddedElement(orderedCollectionIterator->current()->leftElement());
+		keysArray = keysArray->collectionWithAddedElement(orderedCollectionIterator->currentElement()->leftElement());
 	}
 	return keysArray.primitivePointer();
 }

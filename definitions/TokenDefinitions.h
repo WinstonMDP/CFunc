@@ -13,7 +13,7 @@ class TokenDefinitions
 {
 	public:
 	TokenDefinitions();
-	Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* tokenViewInCodeToNameMap();
+	Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* lexemeToTokenNameMap();
 
 	private:
 	SharedPointer<Collection<SharedPointer<TokenDefinition>>> _tokenDefinitionsCollection;
@@ -23,13 +23,13 @@ class TokenDefinitions
 class DefaultTokenDefinition : public TokenDefinition
 {
 	public:
-	DefaultTokenDefinition(SharedPointer<std::string> tokenName, SharedPointer<std::string> viewInCode);
+	DefaultTokenDefinition(SharedPointer<std::string> tokenName, SharedPointer<std::string> lexeme);
 	SharedPointer<std::string> tokenName() const override;
-	bool isEqual(SharedPointer<std::string> viewInCode) override;
+	bool isEqual(SharedPointer<std::string> lexeme) override;
 
 	private:
 	SharedPointer<std::string> _tokenName;
-	SharedPointer<std::string> _viewInCode;
+	SharedPointer<std::string> _lexeme;
 };
 
 class OtherTokenDefinition : public TokenDefinition
@@ -37,7 +37,7 @@ class OtherTokenDefinition : public TokenDefinition
 	public:
 	OtherTokenDefinition(SharedPointer<std::string> tokenName);
 	SharedPointer<std::string> tokenName() const override;
-	bool isEqual(SharedPointer<std::string> viewInCode) override;
+	bool isEqual(SharedPointer<std::string> lexeme) override;
 
 	private:
 	SharedPointer<std::string> _tokenName;

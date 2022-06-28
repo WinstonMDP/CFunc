@@ -44,7 +44,7 @@ class ArrayIterator : public Iterator<Element>
 	ArrayIterator(SharedPointer<Array<Element>>);
 	void first() override;
 	bool isDone() override;
-	Element current() override;
+	Element currentElement() override;
 	void next() override;
 
 	private:

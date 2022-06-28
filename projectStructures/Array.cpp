@@ -10,7 +10,7 @@ void print(SharedPointer<Array<Element>> array, long depth)
 	print("Array<Element> {", depth);
 	SharedPointer<Iterator<Element>> arrayIterator = array->iterator();
 	for (arrayIterator->first(); !arrayIterator->isDone(); arrayIterator->next()) {
-		print(arrayIterator->current(), depth + 1);
+		print(arrayIterator->currentElement(), depth + 1);
 	}
 	print("}", depth);
 }
@@ -95,7 +95,7 @@ bool ArrayIterator<Element>::isDone()
 }
 
 template <typename Element>
-Element ArrayIterator<Element>::current()
+Element ArrayIterator<Element>::currentElement()
 {
 	return _array->elementAtIndex(_currentIndex);
 }

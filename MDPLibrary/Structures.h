@@ -10,7 +10,7 @@ class Iterator
     virtual void first() = 0;
 	virtual bool isDone() = 0;
 	virtual void next() = 0;
-	virtual Element current() = 0;
+	virtual Element currentElement() = 0;
 	virtual ~Iterator() = default;
 };
 

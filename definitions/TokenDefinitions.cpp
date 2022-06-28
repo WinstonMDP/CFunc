@@ -16,20 +16,20 @@ TokenDefinitions::TokenDefinitions()
 	for (tokenDefinitionsIterator->first(); !tokenDefinitionsIterator->isDone(); tokenDefinitionsIterator->next()) {
 		_tokenViewInCodeToNameMap = _tokenViewInCodeToNameMap->collectionWithAddedElement(
 			new DefaultPair<SharedPointer<TokenDefinition>, SharedPointer<std::string>>(
-				tokenDefinitionsIterator->current(),
-				tokenDefinitionsIterator->current()->tokenName()
+				tokenDefinitionsIterator->currentElement(),
+				tokenDefinitionsIterator->currentElement()->tokenName()
 			)
 		);
 	}
 }
 
-Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* TokenDefinitions::tokenViewInCodeToNameMap()
+Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* TokenDefinitions::lexemeToTokenNameMap()
 {
 	return _tokenViewInCodeToNameMap.primitivePointer();
 }
 
-DefaultTokenDefinition::DefaultTokenDefinition(SharedPointer<std::string> tokenName, SharedPointer<std::string> viewInCode)
-: _tokenName {tokenName}, _viewInCode {viewInCode}
+DefaultTokenDefinition::DefaultTokenDefinition(SharedPointer<std::string> tokenName, SharedPointer<std::string> lexeme)
+: _tokenName {tokenName}, _lexeme {lexeme}
 {
 }
 
@@ -38,9 +38,9 @@ SharedPointer<std::string> DefaultTokenDefinition::tokenName() const
 	return _tokenName;
 }
 
-bool DefaultTokenDefinition::isEqual(SharedPointer<std::string> viewInCode)
+bool DefaultTokenDefinition::isEqual(SharedPointer<std::string> lexeme)
 {
-	return *_viewInCode == *viewInCode;
+	return *_lexeme == *lexeme;
 }
 
 OtherTokenDefinition::OtherTokenDefinition(SharedPointer<std::string> tokenName)
@@ -53,7 +53,7 @@ SharedPointer<std::string> OtherTokenDefinition::tokenName() const
 	return _tokenName;
 }
 
-bool OtherTokenDefinition::isEqual(SharedPointer<std::string> viewInCode)
+bool OtherTokenDefinition::isEqual(SharedPointer<std::string> lexeme)
 {
 	return true;
 }

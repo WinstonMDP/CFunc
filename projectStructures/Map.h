@@ -48,7 +48,7 @@ class MapIterator : public Iterator<SharedPointer<Pair<Key, Value>>>
 	MapIterator(SharedPointer<Map<Key, Value>>);
 	void first() override;
 	bool isDone() override;
-	SharedPointer<Pair<Key, Value>> current() override;
+	SharedPointer<Pair<Key, Value>> currentElement() override;
 	void next() override;
 
 	private:

@@ -47,7 +47,7 @@ int main()
 		SharedPointer<CodeFile> codeFile = new CodeFile(new std::string("TestCode.cf"));
 		SharedPointer<Array<SharedPointer<std::string>>> codeWords = codeFile->words();
 		SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator = codeWords->iterator();
-		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<DefaultArray>(tokenDefinitions->tokenViewInCodeToNameMap(), codeWordsIterator);
+		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<DefaultArray>(tokenDefinitions->lexemeToTokenNameMap(), codeWordsIterator);
 		SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
 	}
 	catch (SharedPointer<Exeption> exeption) {
