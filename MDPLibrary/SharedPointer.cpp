@@ -1,49 +1,22 @@
 #include "SharedPointer.h"
 
-#include <iostream>
-
 template <typename Type>
 SharedPointer<Type>::SharedPointer(Type* primitivePointer)
-: _primitivePointer {primitivePointer}
-{
-    if (_primitivePointerToItsCountMap.count(_primitivePointer) == 0) {
-        long long* newPrimitivePointerCount = new long long(1);
-        _primitivePointerToItsCountMap.insert(std::pair<Type*, long long*>(_primitivePointer, newPrimitivePointerCount));
-        _primitivePointerCount = newPrimitivePointerCount;
-    }
-    else {
-        _primitivePointerCount = _primitivePointerToItsCountMap.at(_primitivePointer);
-        ++(*_primitivePointerCount);
-    }
-}
-
-template <typename Type>
-template <typename OtherType>
-SharedPointer<Type>::SharedPointer(OtherType* otherTypePrimitivePointer)
-: SharedPointer(SharedPointer<Type>(otherTypePrimitivePointer))
+: SharedPointer(primitivePointer, primitivePointerCount(primitivePointer))
 {
 }
 
 template <typename Type>
 template <typename OtherType>
-SharedPointer<Type>::SharedPointer(SharedPointer<OtherType> otherValueSharedPointer)
-: SharedPointer(otherValueSharedPointer.primitivePointer())
+SharedPointer<Type>::SharedPointer(SharedPointer<OtherType> otherTypeSharedPointer)
+: SharedPointer(otherTypeSharedPointer.primitivePointer(), otherTypeSharedPointer.primitivePointerCount())
 {
-    if (_primitivePointerToOtherTypesSharedPointerDestructorsMap.count(otherValueSharedPointer.primitivePointer()) == 0) {
-        _primitivePointerToOtherTypesSharedPointerDestructorsMap.insert(
-            std::pair<OtherType*, std::set<SharedPointerDestructor*>>(otherValueSharedPointer.primitivePointer(), std::set<SharedPointerDestructor*>())
-        );
-    }
-    _primitivePointerToOtherTypesSharedPointerDestructorsMap.at(otherValueSharedPointer.primitivePointer()).insert(
-        new DefaultSharedPointerDestructor<OtherType>(otherValueSharedPointer)
-    );
 }
 
 template <typename Type>
-SharedPointer<Type>::SharedPointer(std::nullptr_t primitivePointer)
-: _primitivePointer {primitivePointer}
+SharedPointer<Type>::SharedPointer(std::nullptr_t)
+: SharedPointer(nullptr, nullptr)
 {
-    _primitivePointerCount = nullptr;
 }
 
 template <typename Type>
@@ -54,7 +27,7 @@ SharedPointer<Type>::SharedPointer()
 
 template <typename Type>
 SharedPointer<Type>::SharedPointer(const SharedPointer<Type>& sharedPointer)
-: SharedPointer(sharedPointer.primitivePointer())
+: SharedPointer(sharedPointer.primitivePointer(), sharedPointer.primitivePointerCount())
 {
 }
 
@@ -64,7 +37,7 @@ SharedPointer<Type>& SharedPointer<Type>::operator=(const SharedPointer<Type>& s
     deleteMethod();
     _primitivePointer = sharedPointer.primitivePointer();
     if (_primitivePointer != nullptr) {
-        _primitivePointerCount = _primitivePointerToItsCountMap.at(_primitivePointer);
+        _primitivePointerCount = primitivePointerToItsCountMap.at(_primitivePointer);
         ++(*_primitivePointerCount);
     }
     else {
@@ -93,21 +66,15 @@ Type* SharedPointer<Type>::operator->()
 }
 
 template <typename Type>
-bool operator==(const SharedPointer<Type>& a, const SharedPointer<Type>& b)
-{
-    return a.primitivePointer() == b.primitivePointer();
-}
-
-template <typename Type>
-bool operator!=(const SharedPointer<Type>& a, const SharedPointer<Type>& b)
-{
-    return a.primitivePointer() != b.primitivePointer();
-}
-
-template <typename Type>
 Type* SharedPointer<Type>::primitivePointer() const
 {
     return _primitivePointer;
+}
+
+template <typename Type>
+long* SharedPointer<Type>::primitivePointerCount() const
+{
+    return _primitivePointerCount;
 }
 
 template <typename Type>
@@ -117,37 +84,63 @@ SharedPointer<Type>::~SharedPointer()
 }
 
 template <typename Type>
+SharedPointer<Type>::SharedPointer(Type* primitivePointer, long* primitivePointerCount)
+: _primitivePointer {primitivePointer}, _primitivePointerCount {incrementedPrimitivePointerCount(primitivePointerCount)}
+{
+}
+
+template <typename Type>
+long* SharedPointer<Type>::primitivePointerCount(Type* primitivePointer)
+{
+    long* primitivePointerCount;
+    if (primitivePointerToItsCountMap.count(primitivePointer) == 0) {
+        primitivePointerCount = new long(0);
+        primitivePointerToItsCountMap.insert(std::pair<void*, long*>(primitivePointer, primitivePointerCount));
+    }
+    else {
+        primitivePointerCount = primitivePointerToItsCountMap.at(static_cast<void*>(primitivePointer));
+    }
+    return primitivePointerCount;
+}
+
+template <typename Type>
+long* SharedPointer<Type>::incrementedPrimitivePointerCount(long* primitivePointerCount)
+{
+    if (primitivePointerCount != nullptr) {
+        ++(*primitivePointerCount);
+    }
+    return primitivePointerCount;
+}
+
+template <typename Type>
 void SharedPointer<Type>::deleteMethod()
 {
     if (_primitivePointer != nullptr) {
         --(*_primitivePointerCount);
         if (*_primitivePointerCount == 0) {
-            _primitivePointerToItsCountMap.erase(_primitivePointer);
-            if (_primitivePointerToOtherTypesSharedPointerDestructorsMap.count(_primitivePointer) != 0) {
-                std::cout << "Vot tak" << '\n';
-                _primitivePointerToOtherTypesSharedPointerDestructorsMap.at(_primitivePointer).clear();
-                _primitivePointerToOtherTypesSharedPointerDestructorsMap.erase(_primitivePointer);
-            }
+            primitivePointerToItsCountMap.erase(_primitivePointer);
             delete _primitivePointer;
             delete _primitivePointerCount;
         }
     }
 }
 
-template <typename Type>
-std::map<Type*, long long*> SharedPointer<Type>::_primitivePointerToItsCountMap;
-
-template <typename Type>
-std::map<Type*, std::set<SharedPointerDestructor*>> SharedPointer<Type>::_primitivePointerToOtherTypesSharedPointerDestructorsMap;
-
-template <typename Type>
-DefaultSharedPointerDestructor<Type>::DefaultSharedPointerDestructor(SharedPointer<Type> sharedPointer)
-: _sharedPointer {sharedPointer}
+bool operator==(SharedPointer<std::string> a, SharedPointer<std::string> b)
 {
+    return *a == *b;
 }
 
-template <typename Type>
-DefaultSharedPointerDestructor<Type>::~DefaultSharedPointerDestructor()
+bool operator==(SharedPointer<long> a, SharedPointer<long> b)
 {
-    std::cout << "Hey" << '\n';
+    return *a == *b;
+}
+
+bool operator<(SharedPointer<std::string> a, SharedPointer<std::string> b)
+{
+    return *a < *b;
+}
+
+bool operator<(SharedPointer<long> a, SharedPointer<long> b)
+{
+    return *a < *b;
 }

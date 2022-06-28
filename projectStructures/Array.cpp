@@ -2,6 +2,8 @@
 
 #include "../Printer.h"
 
+#include "../MDPLibrary/Exeption.h"
+
 template <typename Element>
 void print(SharedPointer<Array<Element>> array, long depth)
 {
@@ -65,6 +67,12 @@ long DefaultArray<Element>::size()
 template <typename Element>
 Element DefaultArray<Element>::elementAtIndex(long index)
 {
+	if (index > size()) {
+		throw SharedPointer<Exeption>(new DefaultExeption(
+			new DefaultTraceback(new std::string("template <typename Element>\nElement DefaultArray<Element>::elementAtIndex(long index)")),
+			new DefaultDescription(new std::string("Argument index larger than the size"))
+		));
+	}
 	return _vector->at(index);
 }
 

@@ -44,8 +44,6 @@ class OtherTokenDefinition : public TokenDefinition
 };
 
 bool operator<(const TokenDefinition& a, const TokenDefinition& b);
-template <typename Value>
-bool operator<(const SharedPointer<Value>& a, const SharedPointer<Value>& b);
 
 #include "TokenDefinitions.cpp"
 

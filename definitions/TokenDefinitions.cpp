@@ -62,9 +62,3 @@ bool operator<(const TokenDefinition& a, const TokenDefinition& b)
 {
 	return a.tokenName() < b.tokenName();
 } 
-
-template <typename Value>
-bool operator<(const SharedPointer<Value>& a, const SharedPointer<Value>& b)
-{
-	return *a < *b;
-}

@@ -1,7 +1,7 @@
 #ifndef PRINTER
 #define PRINTER
 
-#include <iostream>
+#include <string>
 
 #include "MDPLibrary/SharedPointer.h"
 

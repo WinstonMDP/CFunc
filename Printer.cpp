@@ -1,5 +1,7 @@
 #include "Printer.h"
 
+#include <iostream>
+
 void retreat(long depth)
 {
 	for (long i = 0; i < depth; ++i) {

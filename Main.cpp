@@ -19,8 +19,7 @@ class CodeFile
 		_fin = new std::ifstream(*_fileName);
 		if(!_fin->is_open()) {
 			throw SharedPointer<Exeption>(new DefaultExeption(
-				new DefaultTraceback(
-					new std::string("template <template <typename> typename Collection\nCodeFile<Collection>::CodeFile(SharedPointer<std::string> fileName)")),
+				new DefaultTraceback(new std::string("CodeFile::CodeFile(SharedPointer<std::string> fileName)")),
 				new DefaultDescription(new std::string("File is not open."))
 			));
 		}

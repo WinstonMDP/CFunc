@@ -1,4 +1,5 @@
 #include "Lexer.h"
+
 #include "Printer.h"
 
 Token::Token(SharedPointer<std::string> name, SharedPointer<std::string> viewInCode)
@@ -22,6 +23,11 @@ void print(SharedPointer<Token> token, long depth)
 	print(token->name(), depth + 1);
 	print(token->viewInCode(), depth + 1);
 	print("}", depth);
+}
+
+bool operator==(SharedPointer<TokenDefinition> a, SharedPointer<TokenDefinition> b)
+{
+	return a->tokenName() == b->tokenName();
 }
 
 bool operator==(SharedPointer<TokenDefinition> tokenDefinition, SharedPointer<std::string> viewInCode)

@@ -3,10 +3,9 @@
 
 #include <string>
 
+#include "MDPLibrary/SharedPointer.h"
 #include "projectStructures/Array.h"
 #include "projectStructures/Map.h"
-
-#include "MDPLibrary/SharedPointer.h"
 
 class Token
 {
@@ -30,6 +29,7 @@ class TokenDefinition
 	virtual ~TokenDefinition() = default;
 };
 
+bool operator==(SharedPointer<TokenDefinition>, SharedPointer<TokenDefinition>);
 bool operator==(SharedPointer<TokenDefinition>, SharedPointer<std::string>);
 bool operator==(SharedPointer<std::string>, SharedPointer<TokenDefinition>);
 
