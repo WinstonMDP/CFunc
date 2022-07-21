@@ -32,7 +32,7 @@ class DefaultMap : public Map<Key, Value>
 	DefaultMap();
 	Iterator<SharedPointer<Pair<Key, Value>>>* iterator() override;
 	DefaultMap<Key, Value>* collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) override;
-	long size() override;
+	SharedPointer<Size> size() override;
 	SharedPointer<Optional<Value>> value(Key) override;
 	SharedPointer<Array<Key>> keys() override;
 
@@ -65,7 +65,7 @@ class OrderedByValueMap : public Map<Key, Value>
 	OrderedByValueMap();
 	Iterator<SharedPointer<Pair<Key, Value>>>* iterator() override;
 	OrderedByValueMap<Key, Value, OrderedCollection>* collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) override;
-	long size() override;
+	SharedPointer<Size> size() override;
 	SharedPointer<Optional<Value>> value(Key) override;
 	SharedPointer<Array<Key>> keys() override;
 

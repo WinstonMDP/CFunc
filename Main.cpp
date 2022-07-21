@@ -2,8 +2,10 @@
 #include <string>
 
 #include "Lexer.h"
+#include "Parser.h"
 #include "Printer.h"
 
+#include "definitions/SyntaxTreeDefinitions.h"
 #include "definitions/TokenDefinitions.h"
 #include "MDPLibrary/Exeption.h"
 #include "MDPLibrary/SharedPointer.h"
@@ -20,7 +22,7 @@ class CodeFile
 		if(!_fin->is_open()) {
 			throw SharedPointer<Exeption>(new DefaultExeption(
 				new DefaultTraceback(new std::string("CodeFile::CodeFile(SharedPointer<std::string> fileName)")),
-				new DefaultDescription(new std::string("File is not open."))
+				new DefaultDescription(new std::string("File is not open"))
 			));
 		}
 	}
@@ -45,10 +47,14 @@ int main()
 	try {
 		SharedPointer<TokenDefinitions> tokenDefinitions = new TokenDefinitions;
 		SharedPointer<CodeFile> codeFile = new CodeFile(new std::string("TestCode.cf"));
-		SharedPointer<Array<SharedPointer<std::string>>> codeWords = codeFile->words();
-		SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator = codeWords->iterator();
-		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<DefaultArray>(tokenDefinitions->lexemeToTokenNameMap(), codeWordsIterator);
+		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<> (
+			tokenDefinitions->lexemeToTokenNameMap(),
+			codeFile->words()->iterator()
+		);
 		SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
+		SharedPointer<SyntaxTreeDefinitions> syntaxTreeDefinitions = new SyntaxTreeDefinitions;
+		SharedPointer<Parser> parser = new Parser(syntaxTreeDefinitions->syntaxTreeBuildingPartsToSyntaxTreeBuilderMap());
+		SharedPointer<SyntaxTree> sytaxTree = parser->syntaxTree(tokens);
 	}
 	catch (SharedPointer<Exeption> exeption) {
 		exeption->baseProcess();

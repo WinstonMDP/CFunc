@@ -45,9 +45,9 @@ DefaultMap<Key, Value>* DefaultMap<Key, Value>::collectionWithAddedElement(Share
 }
 
 template <typename Key, typename Value>
-long DefaultMap<Key, Value>::size()
+SharedPointer<Size> DefaultMap<Key, Value>::size()
 {
-	return _keys->size();
+	return new Size(_keys->size());
 }
 
 template <typename Key, typename Value>
@@ -124,7 +124,7 @@ OrderedByValueMap<Key, Value, OrderedCollection>*
 }
 
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
-long OrderedByValueMap<Key, Value, OrderedCollection>::size()
+SharedPointer<Size> OrderedByValueMap<Key, Value, OrderedCollection>::size()
 {
 	return _orderedCollection->size();
 }

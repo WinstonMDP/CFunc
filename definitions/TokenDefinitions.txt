@@ -1,7 +1,8 @@
-define = "=";
+define-operator = "=";
 lambda-abstraction-operator = ".";
 end-definition-operator = ";";
 opening-course-bracket = "(";
 closing-course-bracket = ")";
-compiler-validation-bracket = """;
+begin-compiler-block-bracket = "[";
+end-compiler-block-bracket = "]";
 variable = other;

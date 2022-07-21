@@ -25,7 +25,7 @@ class TokenDefinition
 {
 	public:
 	virtual SharedPointer<std::string> tokenName() const = 0;
-	virtual bool isEqual(SharedPointer<std::string> lexeme) = 0;
+	virtual bool doesMatch(SharedPointer<std::string> lexeme) = 0;
 	virtual ~TokenDefinition() = default;
 };
 
@@ -46,7 +46,7 @@ class Lexer
 	SharedPointer<OrderedCollection<SharedPointer<Token>>> tokens();
 
 	private:
-	SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> _tokenViewInCodeToNameMap;
+	SharedPointer<Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>> _lexemeToTokenNameMapMap;
 	SharedPointer<Iterator<SharedPointer<std::string>>> _codeWordsIterator;
 	SharedPointer<OrderedCollection<SharedPointer<Token>>> _tokens;
 };

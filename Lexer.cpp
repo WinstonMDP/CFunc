@@ -32,12 +32,12 @@ bool operator==(SharedPointer<TokenDefinition> a, SharedPointer<TokenDefinition>
 
 bool operator==(SharedPointer<TokenDefinition> tokenDefinition, SharedPointer<std::string> lexeme)
 {
-	return tokenDefinition->isEqual(lexeme);
+	return tokenDefinition->doesMatch(lexeme);
 }
 
 bool operator==(SharedPointer<std::string> lexeme, SharedPointer<TokenDefinition> tokenDefinition)
 {
-	return tokenDefinition->isEqual(lexeme);
+	return tokenDefinition->doesMatch(lexeme);
 }
 
 void print(SharedPointer<TokenDefinition> tokenDefinition, long depth)
@@ -53,7 +53,7 @@ Lexer<OrderedCollection>::Lexer(
 	SharedPointer<Iterator<SharedPointer<std::string>>> codeWordsIterator
 )
 : 
-	_tokenViewInCodeToNameMap {lexemeToTokenNameMap},
+	_lexemeToTokenNameMapMap {lexemeToTokenNameMap},
  	_codeWordsIterator {codeWordsIterator},
  	_tokens {new OrderedCollection<SharedPointer<Token>>}
 {
@@ -63,8 +63,8 @@ template <template <typename> typename OrderedCollection>
 SharedPointer<OrderedCollection<SharedPointer<Token>>> Lexer<OrderedCollection>::tokens()
 {
 	for (_codeWordsIterator->first(); !_codeWordsIterator->isDone(); _codeWordsIterator->next()) {
-		SharedPointer<std::string> tokenViewInCode = _codeWordsIterator->currentElement();
-		_tokens = _tokens->collectionWithAddedElement(new Token(value(_tokenViewInCodeToNameMap, tokenViewInCode)->value(), tokenViewInCode));
+		SharedPointer<std::string> lexeme = _codeWordsIterator->currentElement();
+		_tokens = _tokens->collectionWithAddedElement(new Token(value(_lexemeToTokenNameMapMap, lexeme)->value(), lexeme));
 	}
 	return _tokens;
 }

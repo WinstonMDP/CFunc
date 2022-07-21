@@ -3,6 +3,18 @@
 
 #include "SharedPointer.h"
 
+void isNonnegativeNumberValidate(long);
+
+class Size
+{
+	public:
+	Size(long);
+	operator long&();
+
+	private:
+	long _longNumber;
+};
+
 template <typename Element>
 class Iterator
 {
@@ -20,9 +32,12 @@ class Collection
 	public:
 	virtual Iterator<Element>* iterator() = 0;
 	virtual Collection<Element>* collectionWithAddedElement(Element) = 0;
-	virtual long size() = 0;
+	virtual SharedPointer<Size> size() = 0;
 	virtual ~Collection() = default;
 };
+
+template <typename AElement, typename BElement>
+bool operator==(SharedPointer<Collection<AElement>>, SharedPointer<Collection<BElement>>);
 
 template <typename LeftElement, typename RightElement>
 class Pair

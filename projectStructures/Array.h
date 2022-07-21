@@ -7,13 +7,23 @@
 #include "../MDPLibrary/SharedPointer.h"
 #include "../MDPLibrary/Structures.h"
 
+class Index
+{
+	public:
+	Index(long);
+	operator long&();
+
+	private:
+	long _longNumber;
+};
+
 template <typename Element>
 class Array : public Collection<Element>
 {
 	public:
 	virtual Array<Element>* collectionWithAddedElement(Element) = 0;
-	virtual Element elementAtIndex(long) = 0;
-	virtual Array<Element>* arrayWithoutElementAtIndex(long) = 0;
+	virtual Element element(SharedPointer<Index>) = 0;
+	virtual Array<Element>* arrayWithoutElement(SharedPointer<Index>) = 0;
 	virtual ~Array() = default; 
 };
 
@@ -29,9 +39,9 @@ class DefaultArray : public Array<Element>
 	DefaultArray(std::initializer_list<Element>);
 	Iterator<Element>* iterator() override;
 	DefaultArray<Element>* collectionWithAddedElement(Element) override;
-	DefaultArray<Element>* arrayWithoutElementAtIndex(long) override;
-	long size() override;
-	Element elementAtIndex(long) override;
+	DefaultArray<Element>* arrayWithoutElement(SharedPointer<Index>) override;
+	SharedPointer<Size> size() override;
+	Element element(SharedPointer<Index>) override;
 
 	private:
 	SharedPointer<std::vector<Element>> _vector;
@@ -49,7 +59,7 @@ class ArrayIterator : public Iterator<Element>
 
 	private:
 	SharedPointer<Array<Element>> _array;
-	long _currentIndex;
+	SharedPointer<Index> _currentIndex;
 };
 
 #include "Array.cpp"

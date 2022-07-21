@@ -3,18 +3,19 @@
 TokenDefinitions::TokenDefinitions()
 {
 	_tokenDefinitionsCollection = new DefaultArray<SharedPointer<TokenDefinition>> {
-		new DefaultTokenDefinition(new std::string("define"), new std::string("=")),
+		new DefaultTokenDefinition(new std::string("define-operator"), new std::string("=")),
 		new DefaultTokenDefinition(new std::string("lambda-abstraction-operator"), new std::string(".")),
 		new DefaultTokenDefinition(new std::string("end-definition-operator"), new std::string(";")),
 		new DefaultTokenDefinition(new std::string("opening-course-bracket"), new std::string("(")),
 		new DefaultTokenDefinition(new std::string("closing-course-bracket"), new std::string(")")),
-		new DefaultTokenDefinition(new std::string("compiler-validation-bracket"), new std::string("\"")),
+		new DefaultTokenDefinition(new std::string("begin-compiler-block-bracket"), new std::string("[")),
+		new DefaultTokenDefinition(new std::string("end-compiler-block-bracket"), new std::string("]")),
 		new OtherTokenDefinition(new std::string("variable"))
 	};
-	_tokenViewInCodeToNameMap = new OrderedByValueMap<SharedPointer<TokenDefinition>, SharedPointer<std::string>>;
+	_lexemeToTokenNameMapMap = new OrderedByValueMap<SharedPointer<TokenDefinition>, SharedPointer<std::string>>;
 	SharedPointer<Iterator<SharedPointer<TokenDefinition>>> tokenDefinitionsIterator = _tokenDefinitionsCollection->iterator();
 	for (tokenDefinitionsIterator->first(); !tokenDefinitionsIterator->isDone(); tokenDefinitionsIterator->next()) {
-		_tokenViewInCodeToNameMap = _tokenViewInCodeToNameMap->collectionWithAddedElement(
+		_lexemeToTokenNameMapMap = _lexemeToTokenNameMapMap->collectionWithAddedElement(
 			new DefaultPair<SharedPointer<TokenDefinition>, SharedPointer<std::string>>(
 				tokenDefinitionsIterator->currentElement(),
 				tokenDefinitionsIterator->currentElement()->tokenName()
@@ -25,7 +26,7 @@ TokenDefinitions::TokenDefinitions()
 
 Map<SharedPointer<TokenDefinition>, SharedPointer<std::string>>* TokenDefinitions::lexemeToTokenNameMap()
 {
-	return _tokenViewInCodeToNameMap.primitivePointer();
+	return _lexemeToTokenNameMapMap.primitivePointer();
 }
 
 DefaultTokenDefinition::DefaultTokenDefinition(SharedPointer<std::string> tokenName, SharedPointer<std::string> lexeme)
@@ -38,7 +39,7 @@ SharedPointer<std::string> DefaultTokenDefinition::tokenName() const
 	return _tokenName;
 }
 
-bool DefaultTokenDefinition::isEqual(SharedPointer<std::string> lexeme)
+bool DefaultTokenDefinition::doesMatch(SharedPointer<std::string> lexeme)
 {
 	return *_lexeme == *lexeme;
 }
@@ -53,7 +54,7 @@ SharedPointer<std::string> OtherTokenDefinition::tokenName() const
 	return _tokenName;
 }
 
-bool OtherTokenDefinition::isEqual(SharedPointer<std::string> lexeme)
+bool OtherTokenDefinition::doesMatch(SharedPointer<std::string> lexeme)
 {
 	return true;
 }

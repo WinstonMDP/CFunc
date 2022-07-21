@@ -4,6 +4,17 @@
 
 #include "../MDPLibrary/Exeption.h"
 
+Index::Index(long longNumber)
+: _longNumber {longNumber}
+{
+	isNonnegativeNumberValidate(longNumber);
+}
+
+Index::operator long&()
+{
+	return _longNumber;
+}
+
 template <typename Element>
 void print(SharedPointer<Array<Element>> array, long depth)
 {
@@ -51,29 +62,29 @@ DefaultArray<Element>* DefaultArray<Element>::collectionWithAddedElement(Element
 }
 
 template <typename Element>
-DefaultArray<Element>* DefaultArray<Element>::arrayWithoutElementAtIndex(long index)
+DefaultArray<Element>* DefaultArray<Element>::arrayWithoutElement(SharedPointer<Index> index)
 {
 	SharedPointer<std::vector<Element>> vectorToRemoveElement = new std::vector<Element>(*_vector);
-	vectorToRemoveElement->erase(vectorToRemoveElement->begin() + index);
+	vectorToRemoveElement->erase(vectorToRemoveElement->begin() + *index);
 	return new DefaultArray<Element>(vectorToRemoveElement);
 }
 
 template <typename Element>
-long DefaultArray<Element>::size()
+SharedPointer<Size> DefaultArray<Element>::size()
 {
-	return _vector->size();
+	return new Size(_vector->size());
 }
 
 template <typename Element>
-Element DefaultArray<Element>::elementAtIndex(long index)
+Element DefaultArray<Element>::element(SharedPointer<Index> index)
 {
-	if (index > size()) {
+	if (*index > *size()) {
 		throw SharedPointer<Exeption>(new DefaultExeption(
-			new DefaultTraceback(new std::string("template <typename Element>\nElement DefaultArray<Element>::elementAtIndex(long index)")),
+			new DefaultTraceback(new std::string("template <typename Element>\nElement DefaultArray<Element>::element(long index)")),
 			new DefaultDescription(new std::string("Argument index larger than the size"))
 		));
 	}
-	return _vector->at(index);
+	return _vector->at(*index);
 }
 
 template <typename Element>
@@ -91,17 +102,17 @@ void ArrayIterator<Element>::first()
 template <typename Element>
 bool ArrayIterator<Element>::isDone()
 {
-	return _array->size() == _currentIndex;
+	return *_array->size() == *_currentIndex;
 }
 
 template <typename Element>
 Element ArrayIterator<Element>::currentElement()
 {
-	return _array->elementAtIndex(_currentIndex);
+	return _array->element(_currentIndex);
 }
 
 template <typename Element>
 void ArrayIterator<Element>::next()
 {
-	++_currentIndex;
+	++(*_currentIndex);
 }
