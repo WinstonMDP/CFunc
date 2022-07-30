@@ -1,10 +1,57 @@
 #include "Parser.h"
 
+#include "Printer.h"
+
 #include "MDPLibrary/Exeption.h"
 #include "projectStructures/CollectionOperations.h"
 #include "projectStructures/Map.h"
 
-Parser::Parser(SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>>> syntaxTreeBuildingPartsToSyntaxTreeBuilderMap)
+void print(SharedPointer<SyntaxTree> syntaxTree, long depth)
+{
+	
+	SharedPointer<Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>> syntaxTreeChildren = syntaxTree->children();
+	if (syntaxTreeChildren->doesValueExist()) {
+		std::string a = *syntaxTree->name();
+		a += " {";
+		print(a, depth);
+		SharedPointer<Iterator<SharedPointer<Pair<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>> syntaxTreeChildrenIterator =
+			syntaxTreeChildren->value()->iterator();
+		for (syntaxTreeChildrenIterator->first(); !syntaxTreeChildrenIterator->isDone(); syntaxTreeChildrenIterator->next()) {
+			print(syntaxTreeChildrenIterator->currentElement()->rightElement(), depth + 1);
+		}
+		print("}", depth);
+	}
+	else {
+		print(*syntaxTree->name(), depth);
+	}
+}
+
+TokenSyntaxTree::TokenSyntaxTree(SharedPointer<Token> token)
+: _token {token}
+{
+}
+
+SharedPointer<std::string> TokenSyntaxTree::name()
+{
+	return _token->name();
+}
+
+SharedPointer<Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>> TokenSyntaxTree::children()
+{
+	return new Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>();
+}
+
+bool operator==(SharedPointer<SyntaxTreeDefinition> syntaxTreeDefinition, SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
+{
+	return syntaxTreeDefinition->doesMatch(syntaxTreeBuildingParts);
+}
+
+bool operator==(SharedPointer<SyntaxTreeDefinition> syntaxTreeDefinition, SharedPointer<SyntaxTree> syntaxTree)
+{
+	return syntaxTreeDefinition->doesMatch(syntaxTree);
+}
+
+Parser::Parser(SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> syntaxTreeBuildingPartsToSyntaxTreeBuilderMap)
 : _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap {syntaxTreeBuildingPartsToSyntaxTreeBuilderMap}
 {
 }
@@ -14,7 +61,7 @@ SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<T
 	SharedPointer<Iterator<SharedPointer<Token>>> tokensIterator = tokens->iterator();
 	for (tokensIterator->first(); !tokensIterator->isDone(); tokensIterator->next()) {
 		_syntaxTreeBuildingParts = _syntaxTreeBuildingParts->collectionWithAddedElement(
-			new TokenSyntaxTree(tokenIterator->currentElement())
+			new TokenSyntaxTree(tokensIterator->currentElement())
 		);
 	}
 	SharedPointer<Iterator<SharedPointer<SyntaxTree>>> syntaxTreeBuildingPartsIterator;
@@ -34,16 +81,16 @@ SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<T
 				syntaxTreeBuildingPartsIterator->next()
 			) {
 				SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingPartsSubsegment =
-					subsegment<Array>(syntaxTreeBuildingPartsIterator, syntaxTreeBuildingPartsSubsegmentSize);
-				SharedPointer<Optional<SharedPointer<SyntaxTree>>> syntaxTreeFromSyntaxTreeBuildingPartsSubsegment = 
-					_syntaxTreeBuildingPartsToSyntaxTreeBuilderMap->value(syntaxTreeBuildingPartsSubsegment);
-				wasSyntaxTreeBuilt = syntaxTreeFromSyntaxTreeBuildingPartsSubsegment->doesValueExist();
+					subsegment<DefaultArray, Iterator, SharedPointer<SyntaxTree>>(syntaxTreeBuildingPartsIterator, syntaxTreeBuildingPartsSubsegmentSize);
+				SharedPointer<Optional<SharedPointer<SyntaxTreeBuilder>>> syntaxTreeBuilderFromSyntaxTreeBuildingPartsSubsegment = 
+					value(_syntaxTreeBuildingPartsToSyntaxTreeBuilderMap, syntaxTreeBuildingPartsSubsegment);
+				wasSyntaxTreeBuilt = syntaxTreeBuilderFromSyntaxTreeBuildingPartsSubsegment->doesValueExist();
 				if (wasSyntaxTreeBuilt) {
-					_syntaxTreeBuildingParts = replacedCollection<SharedPointer<SyntaxTree>>(
+					_syntaxTreeBuildingParts = replacedArray(
 						_syntaxTreeBuildingParts,
 						currentElementIndex,
 						syntaxTreeBuildingPartsSubsegmentSize,
-						syntaxTreeFromSyntaxTreeBuildingPartsSubsegment->value()
+						syntaxTreeBuilderFromSyntaxTreeBuildingPartsSubsegment->value()->buildedSyntaxTree(syntaxTreeBuildingPartsSubsegment)
 					);
 				}
 			}
@@ -55,5 +102,5 @@ SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<T
 			new DefaultDescription(new std::string("_syntaxTreeBuildingParts doesn`t have one element: it have more or less."))
 		));
 	}
-	return _syntaxTreeBuildingParts;
+	return _syntaxTreeBuildingParts->element(new Index(0));
 }

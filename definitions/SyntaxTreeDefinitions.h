@@ -6,10 +6,13 @@
 class DefaultSyntaxTree : public SyntaxTree
 {
 	public:
+	DefaultSyntaxTree(SharedPointer<std::string> name, SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts);
 	SharedPointer<std::string> name() override;
+	SharedPointer<Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>> children() override;
 
 	private:
 	SharedPointer<std::string> _name;
+	SharedPointer<Array<SharedPointer<SyntaxTree>>> _syntaxTreeBuildingParts;
 };
 
 class DefaultSyntaxTreeBuilder : public SyntaxTreeBuilder
@@ -27,11 +30,11 @@ class SyntaxTreeDefinitions
 {
 	public:
 	SyntaxTreeDefinitions();
-	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>>> syntaxTreeBuildingPartsToSyntaxTreeBuilderMap();
+	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> syntaxTreeBuildingPartsToSyntaxTreeBuilderMap();
 
 	private:
 	SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>> _syntaxTreeDefinitionsCollection;
-	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>>> _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap;
+	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap;
 };
 
 class TokenSyntaxTreeDefinition : public SyntaxTreeDefinition
@@ -40,6 +43,7 @@ class TokenSyntaxTreeDefinition : public SyntaxTreeDefinition
 	TokenSyntaxTreeDefinition(SharedPointer<std::string> tokenName);
 	SharedPointer<SyntaxTreeBuilder> syntaxTreeBuilder() override;
 	bool doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>) override;
+	bool doesMatch(SharedPointer<SyntaxTree>) override;
 
 	private:
 	SharedPointer<std::string> _tokenName;
@@ -51,6 +55,7 @@ class AnythingSyntaxTreeDefinition : public SyntaxTreeDefinition
 	AnythingSyntaxTreeDefinition() = default;
 	SharedPointer<SyntaxTreeBuilder> syntaxTreeBuilder() override;
 	bool doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>) override;
+	bool doesMatch(SharedPointer<SyntaxTree>) override;
 };
 
 class DefaultSyntaxTreeDefinition : public SyntaxTreeDefinition
@@ -59,6 +64,7 @@ class DefaultSyntaxTreeDefinition : public SyntaxTreeDefinition
 	DefaultSyntaxTreeDefinition(SharedPointer<std::string> syntaxTreeName, SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>> definitionParts);
 	SharedPointer<SyntaxTreeBuilder> syntaxTreeBuilder() override;
 	bool doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>) override;
+	bool doesMatch(SharedPointer<SyntaxTree>) override;
 
 	private:
 	SharedPointer<std::string> _syntaxTreeName;
@@ -71,6 +77,7 @@ class OrSyntaxTreeDefinition : public SyntaxTreeDefinition
 	OrSyntaxTreeDefinition(SharedPointer<std::string> syntaxTreeName, SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>> definitionCases);
 	SharedPointer<SyntaxTreeBuilder> syntaxTreeBuilder() override;
 	bool doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>) override;
+	bool doesMatch(SharedPointer<SyntaxTree>) override;
 
 	private:
 	SharedPointer<std::string> _syntaxTreeName;
@@ -80,9 +87,10 @@ class OrSyntaxTreeDefinition : public SyntaxTreeDefinition
 class CaseSyntaxTreeDefinition : public SyntaxTreeDefinition
 {
 	public:
-	CaseSyntaxTreeDefinition(SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>>);
+	CaseSyntaxTreeDefinition(SharedPointer<std::string> syntaxTreeName, SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>> definitionParts);
 	SharedPointer<SyntaxTreeBuilder> syntaxTreeBuilder() override;
 	bool doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>) override;
+	bool doesMatch(SharedPointer<SyntaxTree>) override;
 
 	private:
 	SharedPointer<SyntaxTreeDefinition> _basicSyntaxTreeDefinition;

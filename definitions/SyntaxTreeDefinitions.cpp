@@ -1,5 +1,38 @@
 #include "SyntaxTreeDefinitions.h"
 
+DefaultSyntaxTree::DefaultSyntaxTree(SharedPointer<std::string> name, SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
+: _name {name}, _syntaxTreeBuildingParts {syntaxTreeBuildingParts}
+{
+}
+
+SharedPointer<std::string> DefaultSyntaxTree::name()
+{
+	return _name;
+}
+
+SharedPointer<Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>> DefaultSyntaxTree::children()
+{
+	SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>> outputChildren =
+		new OrderedByValueMap<SharedPointer<std::string>, SharedPointer<SyntaxTree>>();
+	SharedPointer<Iterator<SharedPointer<SyntaxTree>>> syntaxTreeBuildingPartsIterator = _syntaxTreeBuildingParts->iterator();
+	for (syntaxTreeBuildingPartsIterator->first(); !syntaxTreeBuildingPartsIterator->isDone(); syntaxTreeBuildingPartsIterator->next()) {
+		outputChildren = outputChildren->collectionWithAddedElement(new DefaultPair<SharedPointer<std::string>, SharedPointer<SyntaxTree>>(
+			syntaxTreeBuildingPartsIterator->currentElement()->name(), syntaxTreeBuildingPartsIterator->currentElement() 
+		));
+	}
+	return new Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>(outputChildren);
+}
+
+DefaultSyntaxTreeBuilder::DefaultSyntaxTreeBuilder(SharedPointer<std::string> name)
+: _name {name}
+{
+}
+
+SharedPointer<SyntaxTree> DefaultSyntaxTreeBuilder::buildedSyntaxTree(SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
+{
+	return new DefaultSyntaxTree(_name, syntaxTreeBuildingParts);
+}
+
 SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 {
 	SharedPointer<SyntaxTreeDefinition> defineOperatorDefinition = new TokenSyntaxTreeDefinition(new std::string("define-token-operator"));
@@ -22,13 +55,14 @@ SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 		new std::string("definition"),
 		new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {variableDefinition, defineOperatorDefinition, valueDefinition, endDefinitionOperatorDefinition}
 	);
+	SharedPointer<std::string> valueSyntaxTreeName = new std::string("value");
 	valueDefinition = new OrSyntaxTreeDefinition(
-		new std::string("value"),
+		valueSyntaxTreeName,
 		new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {
-			new CaseSyntaxTreeDefinition(new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {variableDefinition}),
-			new CaseSyntaxTreeDefinition(new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {lambdaDefinition}),
-			new CaseSyntaxTreeDefinition(new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {applicationDefinition}),
-			new CaseSyntaxTreeDefinition(new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {
+			new CaseSyntaxTreeDefinition(valueSyntaxTreeName, new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {variableDefinition}),
+			new CaseSyntaxTreeDefinition(valueSyntaxTreeName, new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {lambdaDefinition}),
+			new CaseSyntaxTreeDefinition(valueSyntaxTreeName, new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {applicationDefinition}),
+			new CaseSyntaxTreeDefinition(valueSyntaxTreeName, new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {
 				openingCourseBracketDefinition, valueDefinition, closingCourseBracketDefinition
 			})
 		}
@@ -57,11 +91,11 @@ SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 		lambdaDefinition,
 		applicationDefinition
 	};
-	_syntaxTreeBuildingPartsToSyntaxTreeBuilderMap = new OrderedByValueMap<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>>;
+	_syntaxTreeBuildingPartsToSyntaxTreeBuilderMap = new OrderedByValueMap<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>;
 	SharedPointer<Iterator<SharedPointer<SyntaxTreeDefinition>>> syntaxTreeDefinitionsCollectionIterator = _syntaxTreeDefinitionsCollection->iterator();
 	for (syntaxTreeDefinitionsCollectionIterator->first(); !syntaxTreeDefinitionsCollectionIterator->isDone(); syntaxTreeDefinitionsCollectionIterator->next()) {
 		_syntaxTreeBuildingPartsToSyntaxTreeBuilderMap = _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap->collectionWithAddedElement(
-			new DefaultPair<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>>(
+			new DefaultPair<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>(
 				syntaxTreeDefinitionsCollectionIterator->currentElement(),
 				syntaxTreeDefinitionsCollectionIterator->currentElement()->syntaxTreeBuilder()
 			)
@@ -69,7 +103,7 @@ SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 	}
 }
 
-SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>>> SyntaxTreeDefinitions::syntaxTreeBuildingPartsToSyntaxTreeBuilderMap()
+SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> SyntaxTreeDefinitions::syntaxTreeBuildingPartsToSyntaxTreeBuilderMap()
 {
 	return _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap;
 }
@@ -89,6 +123,11 @@ bool TokenSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<Synt
 	return *syntaxTreeBuildingParts->size() == 0 && syntaxTreeBuildingParts->element(new Index(0))->name() == _tokenName;
 }
 
+bool TokenSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
+{
+	return syntaxTree->name() == _tokenName;
+}
+
 SharedPointer<SyntaxTreeBuilder> AnythingSyntaxTreeDefinition::syntaxTreeBuilder()
 {
 	return new DefaultSyntaxTreeBuilder(new std::string("anything"));
@@ -97,6 +136,11 @@ SharedPointer<SyntaxTreeBuilder> AnythingSyntaxTreeDefinition::syntaxTreeBuilder
 bool AnythingSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>)
 {
 	return true;
+}
+
+bool AnythingSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
+{
+	return syntaxTree->name() == new std::string("anything");
 }
 
 DefaultSyntaxTreeDefinition::DefaultSyntaxTreeDefinition(
@@ -115,6 +159,11 @@ SharedPointer<SyntaxTreeBuilder> DefaultSyntaxTreeDefinition::syntaxTreeBuilder(
 bool DefaultSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
 {
 	return _definitionParts == syntaxTreeBuildingParts;
+}
+
+bool DefaultSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
+{
+	return syntaxTree->name() == _syntaxTreeName;
 }
 
 OrSyntaxTreeDefinition::OrSyntaxTreeDefinition(
@@ -144,8 +193,16 @@ bool OrSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<SyntaxT
 	return doesMatchOutput;
 }
 
-CaseSyntaxTreeDefinition(SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>> definitionParts)
-: _basicSyntaxTreeDefinition {new DefaultSyntaxTreeDefinition(new std::string(""), definitionPatrts)}
+bool OrSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
+{
+	return syntaxTree->name() == _syntaxTreeName;
+}
+
+CaseSyntaxTreeDefinition::CaseSyntaxTreeDefinition(
+	SharedPointer<std::string> syntaxTreeName,
+	SharedPointer<Array<SharedPointer<SyntaxTreeDefinition>>> definitionParts
+)
+: _basicSyntaxTreeDefinition {new DefaultSyntaxTreeDefinition(syntaxTreeName, definitionParts)}
 {
 }
 
@@ -156,5 +213,10 @@ SharedPointer<SyntaxTreeBuilder> CaseSyntaxTreeDefinition::syntaxTreeBuilder()
 
 bool CaseSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
 {
-	return _basicSyntaxTreeDefinition->doesMatch(syntaxtreeBuildingParts);
+	return _basicSyntaxTreeDefinition->doesMatch(syntaxTreeBuildingParts);
+}
+
+bool CaseSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
+{
+	return _basicSyntaxTreeDefinition->doesMatch(syntaxTree);
 }

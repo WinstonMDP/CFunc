@@ -68,6 +68,12 @@ SharedPointer<Array<Key>> DefaultMap<Key, Value>::keys()
 }
 
 template <typename Key, typename Value>
+DefaultMap<Key, Value>* DefaultMap<Key, Value>::copied()
+{
+	return new DefaultMap<Key, Value>(*_map);
+}
+
+template <typename Key, typename Value>
 MapIterator<Key, Value>::MapIterator(SharedPointer<Map<Key, Value>> map)
 : MapIterator(map, map->keys()->iterator())
 {
@@ -99,11 +105,16 @@ SharedPointer<Pair<Key, Value>> MapIterator<Key, Value>::currentElement()
 }
 
 template <typename Key, typename Value>
+MapIterator<Key, Value>* MapIterator<Key, Value>::copied()
+{
+	return new MapIterator(_map->copied());
+}
+
+template <typename Key, typename Value>
 MapIterator<Key, Value>::MapIterator(SharedPointer<Map<Key, Value>> map, SharedPointer<Iterator<Key>> keysIterator)
 : _map {map}, _keysIterator {keysIterator}
 {
 }
-
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
 OrderedByValueMap<Key, Value, OrderedCollection>::OrderedByValueMap()
 : OrderedByValueMap(new OrderedCollection<SharedPointer<Pair<Key, Value>>>)
@@ -152,6 +163,12 @@ SharedPointer<Array<Key>> OrderedByValueMap<Key, Value, OrderedCollection>::keys
 	return keysArray.primitivePointer();
 }
 
+template <typename Key, typename Value, template <typename> typename OrderedCollection>
+OrderedByValueMap<Key, Value, OrderedCollection>* OrderedByValueMap<Key, Value, OrderedCollection>::copied()
+{
+	return new OrderedByValueMap<Key, Value, OrderedCollection>(new OrderedCollection<SharedPointer<Pair<Key, Value>>>(*_orderedCollection));
+}
+ 
 template <typename Key, typename Value, template <typename> typename OrderedCollection>
 OrderedByValueMap<Key, Value, OrderedCollection>::OrderedByValueMap(SharedPointer<OrderedCollection<SharedPointer<Pair<Key, Value>>>> orderedCollection)
 : _orderedCollection {orderedCollection}

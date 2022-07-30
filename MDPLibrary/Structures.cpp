@@ -2,6 +2,18 @@
 
 #include "Exeption.h"
 
+template <typename A, typename B>
+bool operator==(SharedPointer<A> a, SharedPointer<B> b)
+{
+	return b == a;
+}
+
+template <typename A, typename B>
+bool operator!=(SharedPointer<A> a, SharedPointer<B> b)
+{
+	return !(a == b);
+}
+
 void isNonnegativeNumberValidate(long number)
 {
 	if (number < 0) {

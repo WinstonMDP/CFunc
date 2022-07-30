@@ -3,6 +3,12 @@
 
 #include "SharedPointer.h"
 
+template <typename A, typename B>
+bool operator==(SharedPointer<A>, SharedPointer<B>);
+
+template <typename A, typename B>
+bool operator!=(SharedPointer<A>, SharedPointer<B>);
+
 void isNonnegativeNumberValidate(long);
 
 class Size
@@ -23,6 +29,7 @@ class Iterator
 	virtual bool isDone() = 0;
 	virtual void next() = 0;
 	virtual Element currentElement() = 0;
+	virtual Iterator* copied() = 0;
 	virtual ~Iterator() = default;
 };
 
@@ -33,6 +40,7 @@ class Collection
 	virtual Iterator<Element>* iterator() = 0;
 	virtual Collection<Element>* collectionWithAddedElement(Element) = 0;
 	virtual SharedPointer<Size> size() = 0;
+	virtual Collection<Element>* copied() = 0;
 	virtual ~Collection() = default;
 };
 

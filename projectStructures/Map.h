@@ -16,6 +16,7 @@ class Map : public Collection<SharedPointer<Pair<Key, Value>>>
 	virtual Map<Key, Value>* collectionWithAddedElement(SharedPointer<Pair<Key, Value>>) = 0; 
 	virtual SharedPointer<Optional<Value>> value(Key) = 0;
 	virtual SharedPointer<Array<Key>> keys() = 0;
+	virtual Map* copied() = 0;
 	virtual ~Map() = default;
 };
 
@@ -35,6 +36,7 @@ class DefaultMap : public Map<Key, Value>
 	SharedPointer<Size> size() override;
 	SharedPointer<Optional<Value>> value(Key) override;
 	SharedPointer<Array<Key>> keys() override;
+	DefaultMap* copied() override;
 
 	private:
 	SharedPointer<std::map<Key, Value>> _map;
@@ -50,6 +52,7 @@ class MapIterator : public Iterator<SharedPointer<Pair<Key, Value>>>
 	bool isDone() override;
 	SharedPointer<Pair<Key, Value>> currentElement() override;
 	void next() override;
+	MapIterator* copied() override;
 
 	private:
 	MapIterator(SharedPointer<Map<Key, Value>>, SharedPointer<Iterator<Key>>);
@@ -68,6 +71,7 @@ class OrderedByValueMap : public Map<Key, Value>
 	SharedPointer<Size> size() override;
 	SharedPointer<Optional<Value>> value(Key) override;
 	SharedPointer<Array<Key>> keys() override;
+	OrderedByValueMap* copied() override;
 
 	private:
 	OrderedByValueMap(SharedPointer<OrderedCollection<SharedPointer<Pair<Key, Value>>>>);

@@ -47,14 +47,15 @@ int main()
 	try {
 		SharedPointer<TokenDefinitions> tokenDefinitions = new TokenDefinitions;
 		SharedPointer<CodeFile> codeFile = new CodeFile(new std::string("TestCode.cf"));
-		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<> (
+		SharedPointer<Lexer<DefaultArray>> lexer = new Lexer<>(
 			tokenDefinitions->lexemeToTokenNameMap(),
 			codeFile->words()->iterator()
 		);
 		SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
 		SharedPointer<SyntaxTreeDefinitions> syntaxTreeDefinitions = new SyntaxTreeDefinitions;
 		SharedPointer<Parser> parser = new Parser(syntaxTreeDefinitions->syntaxTreeBuildingPartsToSyntaxTreeBuilderMap());
-		SharedPointer<SyntaxTree> sytaxTree = parser->syntaxTree(tokens);
+		SharedPointer<SyntaxTree> syntaxTree = parser->syntaxTree(tokens);
+		print(syntaxTree);
 	}
 	catch (SharedPointer<Exeption> exeption) {
 		exeption->baseProcess();

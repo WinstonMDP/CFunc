@@ -22,10 +22,15 @@ class Array : public Collection<Element>
 {
 	public:
 	virtual Array<Element>* collectionWithAddedElement(Element) = 0;
+	virtual Array<Element>* arrayWithAddedElement(SharedPointer<Index>, Element) = 0;
 	virtual Element element(SharedPointer<Index>) = 0;
 	virtual Array<Element>* arrayWithoutElement(SharedPointer<Index>) = 0;
+	virtual Array* copied() = 0;
 	virtual ~Array() = default; 
 };
+
+template <typename AElement, typename BElement>
+bool operator==(SharedPointer<Array<AElement>>, SharedPointer<Array<BElement>>);
 
 template <typename Element>
 void print(SharedPointer<Array<Element>>, long depth = 0);
@@ -39,9 +44,11 @@ class DefaultArray : public Array<Element>
 	DefaultArray(std::initializer_list<Element>);
 	Iterator<Element>* iterator() override;
 	DefaultArray<Element>* collectionWithAddedElement(Element) override;
+	DefaultArray<Element>* arrayWithAddedElement(SharedPointer<Index>, Element) override;
 	DefaultArray<Element>* arrayWithoutElement(SharedPointer<Index>) override;
 	SharedPointer<Size> size() override;
 	Element element(SharedPointer<Index>) override;
+	DefaultArray* copied() override;
 
 	private:
 	SharedPointer<std::vector<Element>> _vector;
@@ -56,6 +63,7 @@ class ArrayIterator : public Iterator<Element>
 	bool isDone() override;
 	Element currentElement() override;
 	void next() override;
+	ArrayIterator* copied() override;
 
 	private:
 	SharedPointer<Array<Element>> _array;
