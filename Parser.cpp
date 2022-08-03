@@ -36,6 +36,11 @@ SharedPointer<std::string> TokenSyntaxTree::name()
 	return _token->name();
 }
 
+bool operator==(SharedPointer<SyntaxTreeDefinition> a, SharedPointer<SyntaxTreeDefinition> b)
+{
+	return a.primitivePointer() == b.primitivePointer();
+}
+
 SharedPointer<Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>> TokenSyntaxTree::children()
 {
 	return new Optional<SharedPointer<Map<SharedPointer<std::string>, SharedPointer<SyntaxTree>>>>();
@@ -52,7 +57,7 @@ bool operator==(SharedPointer<SyntaxTreeDefinition> syntaxTreeDefinition, Shared
 }
 
 Parser::Parser(SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> syntaxTreeBuildingPartsToSyntaxTreeBuilderMap)
-: _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap {syntaxTreeBuildingPartsToSyntaxTreeBuilderMap}
+: Parser(new DefaultArray<SharedPointer<SyntaxTree>>, syntaxTreeBuildingPartsToSyntaxTreeBuilderMap)
 {
 }
 
@@ -95,6 +100,7 @@ SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<T
 				}
 			}
 		}
+		print(_syntaxTreeBuildingParts);
 	} while (wasSyntaxTreeBuilt);
 	if (*_syntaxTreeBuildingParts->size() != 1) {
 		throw SharedPointer<Exeption>(new DefaultExeption(
@@ -103,4 +109,12 @@ SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<T
 		));
 	}
 	return _syntaxTreeBuildingParts->element(new Index(0));
+}
+
+Parser::Parser(
+	SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts,
+	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> syntaxTreeBuildingPartsToSyntaxTreeBuilderMap
+)
+: _syntaxTreeBuildingParts {syntaxTreeBuildingParts}, _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap {syntaxTreeBuildingPartsToSyntaxTreeBuilderMap}
+{
 }

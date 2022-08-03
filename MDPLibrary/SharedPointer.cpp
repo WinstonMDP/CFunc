@@ -130,9 +130,19 @@ bool operator==(SharedPointer<std::string> a, SharedPointer<std::string> b)
     return *a == *b;
 }
 
+bool operator==(SharedPointer<std::string> stringSharedPointer, std::string string)
+{
+    return *stringSharedPointer == string;
+}
+
 bool operator==(SharedPointer<long> a, SharedPointer<long> b)
 {
     return *a == *b;
+}
+
+bool operator==(SharedPointer<long> longSharedPointer, long longNumber)
+{
+    return *longSharedPointer == longNumber;
 }
 
 bool operator<(SharedPointer<std::string> a, SharedPointer<std::string> b)

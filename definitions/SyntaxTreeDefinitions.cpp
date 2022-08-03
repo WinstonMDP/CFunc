@@ -35,7 +35,7 @@ SharedPointer<SyntaxTree> DefaultSyntaxTreeBuilder::buildedSyntaxTree(SharedPoin
 
 SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 {
-	SharedPointer<SyntaxTreeDefinition> defineOperatorDefinition = new TokenSyntaxTreeDefinition(new std::string("define-token-operator"));
+	SharedPointer<SyntaxTreeDefinition> defineOperatorDefinition = new TokenSyntaxTreeDefinition(new std::string("define-operator"));
 	SharedPointer<SyntaxTreeDefinition> lambdaAbstractionOperatorDefinition = new TokenSyntaxTreeDefinition(new std::string("lambda-abstraction-operator"));
 	SharedPointer<SyntaxTreeDefinition> endDefinitionOperatorDefinition = new TokenSyntaxTreeDefinition(new std::string("end-definition-operator"));
 	SharedPointer<SyntaxTreeDefinition> openingCourseBracketDefinition = new TokenSyntaxTreeDefinition(new std::string("opening-course-bracket"));
@@ -43,11 +43,7 @@ SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 	SharedPointer<SyntaxTreeDefinition> beginCompilerBlockBracketDefinition = new TokenSyntaxTreeDefinition(new std::string("begin-compiler-block-operator"));
 	SharedPointer<SyntaxTreeDefinition> endCompilerBlockBracketDefinition = new TokenSyntaxTreeDefinition(new std::string("end-compiler-block-operator"));
 	SharedPointer<SyntaxTreeDefinition> variableDefinition = new TokenSyntaxTreeDefinition(new std::string("variable"));
-	SharedPointer<SyntaxTreeDefinition> anythingDefinition = new AnythingSyntaxTreeDefinition;
-	SharedPointer<SyntaxTreeDefinition> compilerBlockDefinition = new DefaultSyntaxTreeDefinition(
-		new std::string("compiler-block"),
-		new DefaultArray<SharedPointer<SyntaxTreeDefinition>> {beginCompilerBlockBracketDefinition, anythingDefinition, endCompilerBlockBracketDefinition}
-	);
+	SharedPointer<SyntaxTreeDefinition> compilerBlockDefinition = new CompilerBlockSyntaxTreeDefinition;
 	SharedPointer<SyntaxTreeDefinition> valueDefinition;
 	SharedPointer<SyntaxTreeDefinition> lambdaDefinition;
 	SharedPointer<SyntaxTreeDefinition> applicationDefinition;
@@ -84,7 +80,6 @@ SyntaxTreeDefinitions::SyntaxTreeDefinitions()
 		beginCompilerBlockBracketDefinition,
 		endCompilerBlockBracketDefinition,
 		variableDefinition,
-		anythingDefinition,
 		compilerBlockDefinition,
 		definitionDefinition,
 		valueDefinition,
@@ -126,6 +121,24 @@ bool TokenSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<Synt
 bool TokenSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
 {
 	return syntaxTree->name() == _tokenName;
+}
+
+SharedPointer<SyntaxTreeBuilder> CompilerBlockSyntaxTreeDefinition::syntaxTreeBuilder()
+{
+	return new DefaultSyntaxTreeBuilder(new std::string("compiler-block"));
+}
+
+bool CompilerBlockSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
+{
+	return
+		syntaxTreeBuildingParts->element(new Index(0))->name() == std::string("begin-comiler-block-bracket") &&
+		syntaxTreeBuildingParts->element(new Index(*syntaxTreeBuildingParts->size() - 1))->name() == "end-comiler-block-bracket"
+	;
+}
+
+bool CompilerBlockSyntaxTreeDefinition::doesMatch(SharedPointer<SyntaxTree> syntaxTree)
+{
+	return syntaxTree->name() == "compiler-block";
 }
 
 SharedPointer<SyntaxTreeBuilder> AnythingSyntaxTreeDefinition::syntaxTreeBuilder()

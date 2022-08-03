@@ -35,7 +35,9 @@ class SharedPointer
 };
 
 bool operator==(SharedPointer<std::string>, SharedPointer<std::string>);
+bool operator==(SharedPointer<std::string>, std::string);
 bool operator==(SharedPointer<long>, SharedPointer<long>);
+bool operator==(SharedPointer<long>, long);
 bool operator<(SharedPointer<std::string>, SharedPointer<std::string>);
 bool operator<(SharedPointer<long>, SharedPointer<long>);
 

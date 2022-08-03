@@ -49,6 +49,14 @@ class TokenSyntaxTreeDefinition : public SyntaxTreeDefinition
 	SharedPointer<std::string> _tokenName;
 };
 
+class CompilerBlockSyntaxTreeDefinition : public SyntaxTreeDefinition
+{
+	public:
+	SharedPointer<SyntaxTreeBuilder> syntaxTreeBuilder() override;
+	bool doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>>) override;
+	bool doesMatch(SharedPointer<SyntaxTree>) override;
+};
+
 class AnythingSyntaxTreeDefinition : public SyntaxTreeDefinition
 {
 	public:
