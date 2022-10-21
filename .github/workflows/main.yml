@@ -1,0 +1,9 @@
+name: master-push-action
+on:
+  push:
+    branches:
+      - master
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
