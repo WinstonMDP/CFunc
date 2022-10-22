@@ -24,7 +24,12 @@ public:
               "CodeFile::CodeFile(SharedPointer<std::string> fileName)")),
           new DefaultDescription(new std::string("File is not open"))));
     }
-  }
+  } sadfjasdkfj a;lksjdf;kajs;fldkja;f
+  sdfasdfas f
+  sdfjasdk;fjas
+  dfas]
+  fd
+  a sdfakls;d jf;aklj fasa
 
   SharedPointer<Array<SharedPointer<std::string>>> words() {
     std::string word;
