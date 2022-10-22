@@ -1,5 +1,8 @@
 name: master-push-action
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - master
 jobs:
   lint:
     runs-on: windows-latest
