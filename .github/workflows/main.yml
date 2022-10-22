@@ -15,3 +15,4 @@ jobs:
     - run: git config --global clangFormat.style .clang-format
     - run: git config --global --path clangFormat.stylePath .clang-format
     - run: git clang-format --diff
+    - run: git clangFormat.style
