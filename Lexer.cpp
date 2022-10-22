@@ -14,6 +14,7 @@ SharedPointer<std::string> Token::name()
 
 SharedPointer<std::string> Token::lexeme()
 {
+	return sdjfjasdj;
 	return _lexeme;
 }
 
