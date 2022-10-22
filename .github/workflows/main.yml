@@ -13,3 +13,4 @@ jobs:
       uses: actions/setup-node@v3.5.1
     - run: npm install clang-format
     - run: git config --global --path clangFormat.stylePath .clang-format
+    - run: ls
