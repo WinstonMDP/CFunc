@@ -16,7 +16,7 @@ jobs:
     - run: npm install clang-format
     - run: git config --global clangFormat.style file
     - run: git config --global --path clangFormat.stylePath .clang-format
-    - run: echo "DIFFERENCE = git clang-format --diff HEAD~ HEAD" >> $GITHUB_ENV
+    - run: echo "DIFFERENCE =${{git clang-format --diff HEAD~ HEAD}}" >> $GITHUB_ENV
     - run: echo "${{env.DIFFERENCE}}"
     - if: env.DIFFERENCE != 'no modified files to format'
       run: exit 1
