@@ -19,6 +19,6 @@ jobs:
     - uses: DamianReeves/write-file-action@v1.0
       with:
         path: .github/Difference.txt
-        content: |
+        contents: |
           git clang-format --diff HEAD~ HEAD
         write-mode: overwrite
