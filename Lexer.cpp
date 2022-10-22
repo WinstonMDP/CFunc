@@ -72,7 +72,11 @@ SharedPointer<OrderedCollection<SharedPointer<Token>>> Lexer<OrderedCollection>:
 {
 	for (_codeWordsIterator->first(); !_codeWordsIterator->isDone(); _codeWordsIterator->next()) {
 		SharedPointer<std::string> lexeme = _codeWordsIterator->currentElement();
-		_tokens = _tokens->collectionWithAddedElement(new Token(value(_lexemeToTokenNameMapMap, lexeme)->value(), lexeme));
+	_tokens = _tokens->collectionWithAddedElement(new Token(value(_lexemeToTokenNameMapMap, lexeme)->value(), lexeme));
 	}
 	return _tokens;
 }
+
+
+asdfkakafl;ksjdfl;al
+ajsdf
