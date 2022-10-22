@@ -12,4 +12,4 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.5.1
     - run: npm install clang-format
-    - run: git clang-format --diff HEAD~1
+    - run: git-clang-format --diff --commit HEAD~1
