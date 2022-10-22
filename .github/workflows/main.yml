@@ -20,5 +20,5 @@ jobs:
         export DIFFERENCE = git clang-format --diff HEAD~ HEAD
         echo "::set-env name=DIFFERENCE::$DIFFERENCE"
     - run: echo env.DIFFERENCE
-    - if: env.DIFFERENCE != "no modified files to format"
+    - if: env.DIFFERENCE != 'no modified files to format'
       run: exit 1
