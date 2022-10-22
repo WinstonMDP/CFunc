@@ -9,11 +9,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.5.0
+      with:
+        fetch-depth: 2
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.5.1
     - run: npm install clang-format
-    - run: git rev-list --count HEAD
-    - run: git branch
     - run: git config --global clangFormat.style file
     - run: git config --global --path clangFormat.stylePath .clang-format
-    - run: git clang-format --diff HEAD^ HEAD
+    - run: git clang-format --diff HEAD~ HEAD
