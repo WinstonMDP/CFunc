@@ -9,6 +9,4 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.5.1
     - run: npm install clang-format
-    - run: |
-        difference = git clang-format --diff
-        echo $difference
+    - run: echo ${{git clang-format --diff}}
