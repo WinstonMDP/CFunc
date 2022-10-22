@@ -27,6 +27,7 @@ void print(SharedPointer<Token> token, long depth)
 
 bool operator==(SharedPointer<TokenDefinition> a, SharedPointer<TokenDefinition> b)
 {
+	sdfjk;
 	return a->tokenName() == b->tokenName();
 }
 
@@ -35,6 +36,11 @@ bool operator==(SharedPointer<TokenDefinition> tokenDefinition, SharedPointer<st
 	return tokenDefinition->doesMatch(lexeme);
 }
 sdfkkjsd
+sdafl;askjdfk jasjdf
+
+sdfasdkfa;sj a
+ksjdf;kjasdf
+asjdflkajsdf
 
 
 bool operator==(SharedPointer<std::string> lexeme, SharedPointer<TokenDefinition> tokenDefinition)
