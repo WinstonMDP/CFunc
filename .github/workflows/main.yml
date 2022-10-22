@@ -21,4 +21,8 @@ jobs:
         FIRST_CONDITION: env.DIFFERENCE != 'no modified files to format'
         SECOND_CONDITION: env.DIFFERENCE != 'clang-format did not modify any files'
       if: env.FIRST_CONDITION && env.SECOND_CONDITION
-      run: exit 1
+      run: |
+        echo env.DIFFERENCE
+        echo env.FIRST_CONDITION
+        echo env.SECOND_CONDITION
+        exit 1
