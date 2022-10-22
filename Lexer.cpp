@@ -34,6 +34,8 @@ bool operator==(SharedPointer<TokenDefinition> tokenDefinition, SharedPointer<st
 {
 	return tokenDefinition->doesMatch(lexeme);
 }
+sdfkkjsd
+
 
 bool operator==(SharedPointer<std::string> lexeme, SharedPointer<TokenDefinition> tokenDefinition)
 {
