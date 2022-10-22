@@ -22,3 +22,8 @@ jobs:
         contents: |
           git clang-format --diff HEAD~ HEAD
         write-mode: overwrite
+    - id: file
+      uses: andstor/file-reader-action@v1
+      with:
+        path: ".github/Difference.txt"
+    -run: echo "${ steps.file.outputs.contents }"
