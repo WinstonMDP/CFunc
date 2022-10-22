@@ -17,7 +17,7 @@ jobs:
     - run: git config --global clangFormat.style file
     - run: git config --global --path clangFormat.stylePath .clang-format
     - id: difference
-      run: echo "DIFFERENCE=${{git clang-format --diff HEAD~ HEAD}}" >> $GITHUB_OUTPUT
+      run: echo "DIFFERENCE=$(git clang-format --diff HEAD~ HEAD)" >> $GITHUB_OUTPUT
     - run: echo ${{steps.difference.DIFFERENCE}}
     - if: steps.difference.DIFFERENCE != 'no modified files to format'
       run: exit 1
