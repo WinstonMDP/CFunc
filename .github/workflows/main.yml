@@ -10,5 +10,5 @@ jobs:
       uses: actions/setup-node@v3.5.1
     - run: npm install clang-format
     - run: |
-        difference = git clang-format -diff
+        difference = git clang-format --diff
         echo $difference
