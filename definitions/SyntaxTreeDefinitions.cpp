@@ -131,8 +131,8 @@ SharedPointer<SyntaxTreeBuilder> CompilerBlockSyntaxTreeDefinition::syntaxTreeBu
 bool CompilerBlockSyntaxTreeDefinition::doesMatch(SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts)
 {
 	return
-		syntaxTreeBuildingParts->element(new Index(0))->name() == std::string("begin-comiler-block-bracket") &&
-		syntaxTreeBuildingParts->element(new Index(*syntaxTreeBuildingParts->size() - 1))->name() == "end-comiler-block-bracket"
+		syntaxTreeBuildingParts->element(new Index(0))->name() == std::string("begin-compiler-block-bracket") &&
+		syntaxTreeBuildingParts->element(new Index(*syntaxTreeBuildingParts->size() - 1))->name() == "end-compiler-block-bracket"
 	;
 }
 

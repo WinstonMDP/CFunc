@@ -1,4 +1,4 @@
-compiler-block = begin-comiler-block-bracket anything end-compiler-block-bracket;
+compiler-block = begin-compiler-block-bracket anything end-compiler-block-bracket;
 definition = variable define-operator value end-definition-operator;
 value = variable ||
 	lambda ||

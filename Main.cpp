@@ -7,7 +7,7 @@
 
 #include "definitions/SyntaxTreeDefinitions.h"
 #include "definitions/TokenDefinitions.h"
-#include "MDPLibrary/Exeption.h"
+#include "MDPLibrary/Exception.h"
 #include "MDPLibrary/SharedPointer.h"
 #include "projectStructures/Array.h"
 #include "projectStructures/Map.h"
@@ -20,7 +20,7 @@ class CodeFile
 	{
 		_fin = new std::ifstream(*_fileName);
 		if(!_fin->is_open()) {
-			throw SharedPointer<Exeption>(new DefaultExeption(
+			throw SharedPointer<Exception>(new DefaultException(
 				new DefaultTraceback(new std::string("CodeFile::CodeFile(SharedPointer<std::string> fileName)")),
 				new DefaultDescription(new std::string("File is not open"))
 			));
@@ -57,11 +57,11 @@ int main()
 		SharedPointer<SyntaxTree> syntaxTree = parser->syntaxTree(tokens);
 		print(syntaxTree);
 	}
-	catch (SharedPointer<Exeption> exeption) {
-		exeption->baseProcess();
+	catch (SharedPointer<Exception> Exception) {
+		Exception->baseProcess();
 	}
-	catch (const char* exeption) {
-		std::cout << exeption << '\n';
+	catch (const char* Exception) {
+		std::cout << Exception << '\n';
 	}
 	return 0;
 }

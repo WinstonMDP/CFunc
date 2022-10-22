@@ -2,7 +2,7 @@
 
 #include "Printer.h"
 
-#include "MDPLibrary/Exeption.h"
+#include "MDPLibrary/Exception.h"
 #include "projectStructures/CollectionOperations.h"
 #include "projectStructures/Map.h"
 
@@ -103,7 +103,7 @@ SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<T
 		print(_syntaxTreeBuildingParts);
 	} while (wasSyntaxTreeBuilt);
 	if (*_syntaxTreeBuildingParts->size() != 1) {
-		throw SharedPointer<Exeption>(new DefaultExeption(
+		throw SharedPointer<Exception>(new DefaultException(
 			new DefaultTraceback(new std::string("SharedPointer<SyntaxTree> Parser::syntaxTree(SharedPointer<Array<SharedPointer<Token>>> tokens)")),
 			new DefaultDescription(new std::string("_syntaxTreeBuildingParts doesn`t have one element: it have more or less."))
 		));

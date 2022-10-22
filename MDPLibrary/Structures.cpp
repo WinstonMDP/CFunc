@@ -1,6 +1,6 @@
 #include "Structures.h"
 
-#include "Exeption.h"
+#include "Exception.h"
 
 template <typename A, typename B>
 bool operator==(SharedPointer<A> a, SharedPointer<B> b)
@@ -17,7 +17,7 @@ bool operator!=(SharedPointer<A> a, SharedPointer<B> b)
 void isNonnegativeNumberValidate(long number)
 {
 	if (number < 0) {
-		throw SharedPointer<Exeption>(new DefaultExeption(
+		throw SharedPointer<Exception>(new DefaultException(
 			new DefaultTraceback(new std::string("void isNonnegativeNumberValidate(long number)")),
 			new DefaultDescription(new std::string("number mast be >= 0"))
 		));

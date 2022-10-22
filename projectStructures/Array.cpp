@@ -2,7 +2,7 @@
 
 #include "../Printer.h"
 
-#include "../MDPLibrary/Exeption.h"
+#include "../MDPLibrary/Exception.h"
 
 Index::Index(long longNumber)
 : _longNumber {longNumber}
@@ -99,7 +99,7 @@ template <typename Element>
 Element DefaultArray<Element>::element(SharedPointer<Index> index)
 {
 	if (*index > *size()) {
-		throw SharedPointer<Exeption>(new DefaultExeption(
+		throw SharedPointer<Exception>(new DefaultException(
 			new DefaultTraceback(new std::string("template <typename Element>\nElement DefaultArray<Element>::element(long index)")),
 			new DefaultDescription(new std::string("Argument index larger than the size"))
 		));
