@@ -16,10 +16,9 @@ jobs:
     - run: npm install clang-format
     - run: git config --global clangFormat.style file
     - run: git config --global --path clangFormat.stylePath .clang-format
-    - run: |
-        difference = git clang-format --diff HEAD~ HEAD
-        firstCondition = ${difference} != 'no modified files to format'
-        secondCondition = ${difference} != 'clang-format did not modify any files'
-        if: ${firstCondition} && ${secondCondition}; then
-          exit 1
-        fi
+    - env:
+        DIFFERENCE: git clang-format --diff HEAD~ HEAD
+        FIRST_CONDITION: env.DIFFERENCE != 'no modified files to format'
+        SECOND_CONDITION: env.DIFFERENCE != 'clang-format did not modify any files'
+      if: env.FIRST_CONDITION && env.SECOND_CONDITION
+      run: exit 1
