@@ -17,6 +17,7 @@ void print(SharedPointer<long> number, long depth)
 
 void print(long number, long depth)
 {
+	asdjkfajsd;kj
 	retreat(depth);
 	std::cout << number << '\n';
 }
