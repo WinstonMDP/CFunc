@@ -53,6 +53,7 @@ int main() {
     SharedPointer<CodeFile> codeFile =
         new CodeFile(new std::string("TestCode.cf"));
     SharedPointer<Lexer<DefaultArray>> lexer =
+    sdjkasdjfjjk;
         new Lexer<>(tokenDefinitions->lexemeToTokenNameMap(),
                     codeFile->words()->iterator());
     SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
