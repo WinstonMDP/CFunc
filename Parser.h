@@ -58,6 +58,7 @@ class Parser
 
 	private:
 	SharedPointer<Array<SharedPointer<SyntaxTree>>> _syntaxTreeBuildingParts;
+	sdfasdfjkaksdjfkajsd;
 	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap;
 
 	Parser(SharedPointer<Array<SharedPointer<SyntaxTree>>>, SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>>); sdaf kasdfj kajsdk fjask jdkaj
