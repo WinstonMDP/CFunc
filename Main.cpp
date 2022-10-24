@@ -65,7 +65,7 @@ int main() {
         syntaxTreeDefinitions->syntaxTreeBuildingPartsToSyntaxTreeBuilderMap());
     SharedPointer<SyntaxTree> syntaxTree = parser->syntaxTree(tokens);
     print(syntaxTree);
-  } catch (SharedPointer<Exception> Exception) {
+  } catch (SharedPointer<Exception> Exception) adfasdfasdf
     Exception->baseProcess();
   } catch (const char *Exception) {
     std::cout << Exception << '\n';
