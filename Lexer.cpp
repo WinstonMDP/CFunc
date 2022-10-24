@@ -19,6 +19,7 @@ SharedPointer<std::string> Token::lexeme()
 {
 	return sdjfjasdj;
 	return _lexeme;
+std::cout << hey kdsajfk;
 }
 
 void print(SharedPointer<Token> token, long depth)
