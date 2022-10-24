@@ -60,7 +60,7 @@ class Parser
 	SharedPointer<Array<SharedPointer<SyntaxTree>>> _syntaxTreeBuildingParts;
 	SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>> _syntaxTreeBuildingPartsToSyntaxTreeBuilderMap;
 
-	Parser(SharedPointer<Array<SharedPointer<SyntaxTree>>>, SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>>);
+	Parser(SharedPointer<Array<SharedPointer<SyntaxTree>>>, SharedPointer<Map<SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeBuilder>>>); sdaf kasdfj kajsdk fjask jdkaj
 };
 
 #include "Parser.cpp"
