@@ -48,6 +48,7 @@ class SyntaxTreeDefinition
 
 bool operator==(SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTreeDefinition>);
 bool operator==(SharedPointer<SyntaxTreeDefinition>, SharedPointer<Array<SharedPointer<SyntaxTree>>> syntaxTreeBuildingParts);
+sdfjaskdjfskkjkj;
 bool operator==(SharedPointer<SyntaxTreeDefinition>, SharedPointer<SyntaxTree>);
 
 class Parser
