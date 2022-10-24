@@ -18,5 +18,5 @@ jobs:
     - run: git config --global --path clangFormat.stylePath .clang-format
     - run: git clang-format-12 --diff HEAD~ HEAD
     - run: |
-          DIFFERECE = "$(git clang-format-12 --diff HEAD~ HEAD)"
+          DIFFERECE="$(git clang-format-12 --diff HEAD~ HEAD)"
           echo "${DIFFERECE}"
