@@ -57,6 +57,7 @@ int main() {
         new Lexer<>(tokenDefinitions->lexemeToTokenNameMap(),
                     codeFile->words()->iterator());
     SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
+    asdjfashjdjhsa
     SharedPointer<SyntaxTreeDefinitions> syntaxTreeDefinitions =
         new SyntaxTreeDefinitions;
         asdklfjaskdj;
