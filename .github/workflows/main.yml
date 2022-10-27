@@ -1,5 +1,5 @@
 name: master-push-action
-on: [push, pull_request]
+on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
