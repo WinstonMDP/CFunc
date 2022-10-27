@@ -8,8 +8,9 @@ jobs:
       uses: actions/checkout@v2.5.0
       with:
         fetch-depth: 2
-    - run: sudo apt update
-    - run: sudo apt install clang-14
+    - run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key
+        sudo apt-key add -
     - run: clang --version
     - run: git config --global clangFormat.style file
     - run: git config --global --path clangFormat.stylePath .clang-format
