@@ -14,7 +14,7 @@ jobs:
     - run: git config --global clangFormat.style file
     - run: git config --global --path clangFormat.stylePath .clang-format
     - run: |
-          DIFFERECE="$(git clang-format-15 --diff HEAD~ HEAD)"
+          DIFFERECE="$(git-clang-format --diff HEAD~ HEAD)"
           echo "${DIFFERECE}"
           if [[ $DIFFERECE != "no modified files to format" && $DIFFERECE != "clang-format did not modify any files" ]]; then
             exit 1
