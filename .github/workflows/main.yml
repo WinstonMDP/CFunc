@@ -24,6 +24,6 @@ jobs:
             exit 1
           fi
     - name: Write AST to ast.txt
-      run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
+      run: clang++ -Xclang -ast-dump -fsyntax-only -ast-dump-filter=isExpansionInMainFile() Main.cpp > ast.txt || true
     - name: Print code complexity 
       run: wc -l ast.txt
