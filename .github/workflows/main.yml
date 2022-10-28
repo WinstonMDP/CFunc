@@ -12,15 +12,18 @@ jobs:
       uses: KyleMayes/install-llvm-action@v1.6.0
       with:
         version: "14.0"
-    - run: clang --version
-    - run: git config --global clangFormat.style file
-    - run: git config --global --path clangFormat.stylePath .clang-format
-    - run: |
+    - name: Configure git clang-format
+      run: |
+        git config --global clangFormat.style file
+        git config --global --path clangFormat.stylePath .clang-format
+    - name: Check formating of changes
+      run: |
           DIFFERECE="$(git clang-format --diff HEAD~ HEAD)"
           echo "${DIFFERECE}"
           if [[ $DIFFERECE != "no modified files to format" && $DIFFERECE != "clang-format did not modify any files" ]]; then
             exit 1
           fi
-    - run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
-    - name: complexity 
+    - name: Write AST to ast.txt
+      run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
+    - name: Print code complexity 
       run: wc -l ast.txt
