@@ -26,4 +26,8 @@ jobs:
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
     - name: Print code complexity 
-      run: wc -l ast.txt
+      run: |
+          touch Complexity.txt
+          sed -i '1s/^/<added text> /' Complexity.txt
+          wc -l ast.txt > Complexity.txt
+          cat Complexity.txt
