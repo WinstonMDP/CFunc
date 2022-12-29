@@ -28,7 +28,6 @@ jobs:
     - name: Print code complexity 
       run: |
           touch Complexity.txt
-          sed -i '1s/^/<added text> /' Complexity.txt
           wc -l ast.txt > Complexity.txt
           cat Complexity.txt
     - name: Add & Commit
