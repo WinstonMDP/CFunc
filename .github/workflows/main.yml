@@ -31,7 +31,7 @@ jobs:
           echo $A
           B="$(cat Complexity.txt | awk '{print $3;}')"
           echo $B
-          let "C = $A - $B"
+          C=$(expr $A - $B)
           echo $C
           awk '{print "Current complexity: ",$A," Difference with previous value: ",$C;}' > Complexity.txt
           cat Complexity.txt
