@@ -16,9 +16,5 @@ jobs:
       run: |
         git config --global clangFormat.style file
         git config --global --path clangFormat.stylePath .clang-format
-    - name: Check formating of changes
-      run: |
-            exit 1
-          fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
