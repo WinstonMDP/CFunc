@@ -33,7 +33,7 @@ jobs:
           echo $PREVIOUS_COMPLEXITY
           DIFFERENCE=$(($CURRENT_COMPLEXITY - $PREVIOUS_COMPLEXITY))
           echo $DIFFERENCE
-          awk '{print "Current complexity:",$CURRENT_COMPLEXITY,"Difference with previous value:",$DIFFERENCE}'
+          echo $CURRENT_COMPLEXITY $DIFFERENCE | awk '{print "Current complexity:",$1,"Difference with previous value:",$2;}'
           awk '{print "Current complexity:",$CURRENT_COMPLEXITY,"Difference with previous value:",$DIFFERENCE;}' > Complexity.txt
           cat Complexity.txt
     - name: Add & Commit
