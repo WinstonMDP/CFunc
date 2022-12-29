@@ -25,13 +25,4 @@ jobs:
           fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v3.0.1
-      with:
-        name: Complexity
-    - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}' > Complexity.txt
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.1
-      with:
-        name: Complexity
-        path: Complexity.txt
+    - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}'
