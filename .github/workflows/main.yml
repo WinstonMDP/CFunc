@@ -18,11 +18,7 @@ jobs:
         git config --global --path clangFormat.stylePath .clang-format
     - name: Check formating of changes
       run: |
-          DIFFERENCE="$(git clang-format --diff HEAD~ HEAD)"
-          echo "${DIFFERENCE}"
-          if [[ $DIFFERENCE != "no modified files to format" && $DIFFERECE != "clang-format did not modify any files" ]]; then
             exit 1
           fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
-    - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}'

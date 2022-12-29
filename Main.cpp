@@ -57,17 +57,9 @@ int main() {
         new Lexer<>(tokenDefinitions->lexemeToTokenNameMap(),
                     codeFile->words()->iterator());
     SharedPointer<Array<SharedPointer<Token>>> tokens = lexer->tokens();
-    SharedPointer<SyntaxTreeDefinitions> syntaxTreeDefinitions =
-        new SyntaxTreeDefinitions;
-        asdjfkajkjd:
-    SharedPointer<Parser> parser = new Parser(
-        syntaxTreeDefinitions->syntaxTreeBuildingPartsToSyntaxTreeBuilderMap());
-    SharedPointer<SyntaxTree> syntaxTree = parser->syntaxTree(tokens);
-    print(syntaxTree);
-  } catch (SharedPointer<Exception> Exception) {
-    Exception->baseProcess();
-  } catch (const char *Exception) {
+    asdjfashjdjhsa
+
     std::cout << Exception << '\n';
-  }
+  }sdasdfasfda
   return 0;
 }
