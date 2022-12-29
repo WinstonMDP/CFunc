@@ -18,16 +18,19 @@ jobs:
         git config --global --path clangFormat.stylePath .clang-format
     - name: Check formating of changes
       run: |
-          DIFFERECE="$(git clang-format --diff HEAD~ HEAD)"
-          echo "${DIFFERECE}"
-          if [[ $DIFFERECE != "no modified files to format" && $DIFFERECE != "clang-format did not modify any files" ]]; then
+          DIFFERENCE="$(git clang-format --diff HEAD~ HEAD)"
+          echo "${DIFFERENCE}"
+          if [[ $DIFFERENCE != "no modified files to format" && $DIFFERECE != "clang-format did not modify any files" ]]; then
             exit 1
           fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
     - name: Print code complexity 
       run: |
-          wc -l ast.txt | awk '{print $1;}' > Complexity.txt
+          CURRENT_COMPLEXITY="$(wc -l ast.txt | awk '{print $1;}')"
+          PREVIOUS_COMPLEXITY=$(cat Complexity.txt | awk '{print $2;}')"
+          let "DIFFERENCE = CURRENT_COMPLEXITY - PREVIOUS_COMPLEXITY"
+          awk '{print "Current complexity: ",$CURRENT_COMPLEXITY," Difference with previous value: ",$DIFFERENCE}' > Complexity.txt
           cat Complexity.txt
     - name: Add & Commit
       uses: EndBug/add-and-commit@v9.1.1
