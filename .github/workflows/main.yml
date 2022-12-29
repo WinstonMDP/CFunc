@@ -27,7 +27,6 @@ jobs:
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
     - name: Print code complexity 
       run: |
-          touch Complexity.txt
           wc -l ast.txt | awk '{print $1;}' > Complexity.txt
           cat Complexity.txt
     - name: Add & Commit
