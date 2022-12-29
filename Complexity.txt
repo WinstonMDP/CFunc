@@ -1,1 +1,1 @@
-123707
+Current complexity: 123707 Difference with previous value: 1324
