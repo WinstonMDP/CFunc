@@ -29,16 +29,7 @@ jobs:
       uses: actions/download-artifact@v3.0.1
       with:
         name: Complexity
-    - name: Print code complexity 
-      run: |
-          CURRENT_COMPLEXITY="$(wc -l ast.txt | awk '{print $1;}')"
-          echo $CURRENT_COMPLEXITY
-          PREVIOUS_COMPLEXITY="$(cat Complexity.txt | awk '{print $3;}')"
-          echo $PREVIOUS_COMPLEXITY
-          DIFFERENCE=$(($CURRENT_COMPLEXITY - $PREVIOUS_COMPLEXITY))
-          echo $DIFFERENCE
-          echo $CURRENT_COMPLEXITY $DIFFERENCE | awk '{print "Current complexity:",$1,"Difference with previous value:",$2;}' > Complexity.txt
-          cat Complexity.txt
+    - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}' > Complexity.txt
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.1
       with:
