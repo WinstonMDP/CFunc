@@ -1,0 +1,8 @@
+compiler-block = begin-compiler-block-bracket anything end-compiler-block-bracket;
+definition = variable define-operator value end-definition-operator;
+value = variable ||
+	lambda ||
+	application ||
+	opening-course-bracket value closing-course-bracket;
+lambda = variable lambda-abstraction-operator value;
+application = value value;
