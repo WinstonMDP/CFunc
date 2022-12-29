@@ -35,6 +35,11 @@ jobs:
           echo $DIFFERENCE
           echo $CURRENT_COMPLEXITY $DIFFERENCE | awk '{print "Current complexity:",$1,"Difference with previous value:",$2;}' > Complexity.txt
           cat Complexity.txt
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: Complexity
+        path: Complexity.txt
     - name: Add & Commit
       uses: EndBug/add-and-commit@v9.1.1
       with:
