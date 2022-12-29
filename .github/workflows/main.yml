@@ -16,23 +16,5 @@ jobs:
       run: |
         git config --global clangFormat.style file
         git config --global --path clangFormat.stylePath .clang-format
-    - name: Check formating of changes
-      run: |
-          DIFFERECE="$(git clang-format --diff HEAD~ HEAD)"
-          echo "${DIFFERECE}"
-          if [[ $DIFFERECE != "no modified files to format" && $DIFFERECE != "clang-format did not modify any files" ]]; then
-            exit 1
-          fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
-    - name: Print code complexity 
-      run: |
-          touch Complexity.txt
-          sed -i '1s/^/<added text> /' Complexity.txt
-          wc -l ast.txt > Complexity.txt
-          cat Complexity.txt
-    - name: Add & Commit
-      uses: EndBug/add-and-commit@v9.1.1
-      with:
-        add: ast.txt
-        message: 'AST commit'
