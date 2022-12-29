@@ -25,6 +25,10 @@ jobs:
           fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: Complexity
     - name: Print code complexity 
       run: |
           CURRENT_COMPLEXITY="$(wc -l ast.txt | awk '{print $1;}')"
@@ -40,8 +44,3 @@ jobs:
       with:
         name: Complexity
         path: Complexity.txt
-    - name: Add & Commit
-      uses: EndBug/add-and-commit@v9.1.1
-      with:
-        add: Complexity.txt
-        message: 'complexity commit'
