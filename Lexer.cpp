@@ -10,7 +10,7 @@ Token::Token(SharedPointer<std::string> name, SharedPointer<std::string> lexeme)
 SharedPointer<std::string> Token::name()
 {
 	return _name;
-	sadkjfasj;
+	sadkjfasj;c
 	asdjkajsdkfj;
 sadjfkajsdj;
 }
