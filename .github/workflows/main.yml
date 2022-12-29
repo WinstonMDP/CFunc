@@ -28,6 +28,7 @@ jobs:
     - name: Print code complexity 
       run: |
           CURRENT_COMPLEXITY="$(wc -l ast.txt | awk '{print $1;}')"
+          echo $CURRENT_COMPLEXITY
           PREVIOUS_COMPLEXITY="$(cat Complexity.txt | awk '{print $3;}')"
           let "DIFFERENCE = CURRENT_COMPLEXITY - PREVIOUS_COMPLEXITY"
           awk '{print "Current complexity: ",$CURRENT_COMPLEXITY," Difference with previous value: ",$DIFFERENCE;}' > Complexity.txt
