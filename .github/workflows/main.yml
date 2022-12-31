@@ -15,8 +15,9 @@ jobs:
         echo $A
         B="$(clang-format -n --Werror noSuchFile)" || true
         echo $B
-        C="&(clang-format -n --Werror noSuchFile noSuchFile)" || true
+        C="$(clang-format -n --Werror noSuchFile noSuchFile)" || true
         echo $C
+        echo $A
         if [[ $A != $B && $A != $C ]]; then
           exit 1
         fi
