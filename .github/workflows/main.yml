@@ -11,16 +11,12 @@ jobs:
       with:
         version: "14.0"
     - run: |
-        A="$(clang-format --style=file -n --Werror *.cpp *.h)" || true
-        echo $A
-        B="$(clang-format -n --Werror noSuchFile)" || true
-        echo $B
-        C="$(clang-format -n --Werror noSuchFile noSuchFile)" || true
-        echo $C
-        echo $A
-        if [[ $A != $B && $A != $C ]]; then
-          exit 1
-        fi
+        clang-format --style=file -n --Werror *.cpp *.h > formattingReport.txt || true
+        clang-format -n --Werror noSuchFile > noSuchFileExample.txt || true
+        clang-format -n --Werror noSuchFile noSuchFile > doubleNoSuchFileExample.txt || true
+        cat noSuchFileExample.txt
+        cat doubleNoSuchFileExample.txt
+        cat formattingReport.txt
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
     - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}'
