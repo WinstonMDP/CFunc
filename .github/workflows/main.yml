@@ -1,5 +1,5 @@
 name: master-push-action
-on: [push, pull_request]
+on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -20,7 +20,7 @@ jobs:
       run: |
           FORMATTING_REPORT="$(clang-format -n -Werror *.cpp *.h)"
           echo "${FORMATTING_REPORT}"
-          if [[ $FORMATTING_REPORT != "invalid argument\ninvalid argument" && $FORMATTING_REPORT != "invalid argument" ]]; then
+          if [[ $FORMATTING_REPORT != "No such file or directory\nNo such file or directory" && $FORMATTING_REPORT != "No such file or directory" ]]; then
             exit 1
           fi
     - name: Write AST to ast.txt
