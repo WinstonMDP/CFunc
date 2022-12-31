@@ -13,6 +13,7 @@ jobs:
     - run: |
         clang-format --style=file -n --Werror *.cpp *.h &> formattingReport.txt || true
         FORMATTING_REPORT="$(cat formattingReport.txt)"
+        echo $FORMATTING_REPORT
         clang-format -n --Werror noSuchFile &> noSuchFileExample.txt || true
         NO_SUCH_FILE_EXAMPLE="$(cat noSuchFileExample.txt)"
         clang-format -n --Werror noSuchFile noSuchFile &> doubleNoSuchFileExample.txt || true
