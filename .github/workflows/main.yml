@@ -16,8 +16,8 @@ jobs:
         git config --global --path clangFormat.stylePath .clang-format
     - name: Check formating of changes
       run: |
-          FORMATTING_REPORT="$(clang-format -n -Werror *.cpp *.h)"
-          if [[ $FORMATTING_REPORT != "$(clang-format -n -Werror noSuchFile)" && $FORMATTING_REPORT != "$(clang-format -n -Werror noSuchFile noSuchFile)" ]]; then
+          A="$(clang-format -n -Werror *.cpp *.h)"
+          if [[ $A != "$(clang-format -n -Werror noSuchFile)" && $A != "$(clang-format -n -Werror noSuchFile noSuchFile)" ]]; then
             exit 1
           fi
     - name: Write AST to ast.txt
