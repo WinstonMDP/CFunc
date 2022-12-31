@@ -10,13 +10,15 @@ jobs:
       uses: KyleMayes/install-llvm-action@v1.6.0
       with:
         version: "14.0"
-    - name: Check formating of changes
+    - continue-on-error: true
       run: |
-          clang-format --style=file -n *.cpp *.h > formattingReport.txt
-          exit 0
-          if [[ $A != "$(clang-format -n -Werror noSuchFile)" && $A != "$(clang-format -n -Werror noSuchFile noSuchFile)" ]]; then
-            exit 1
-          fi
+          clang-format --style=file -n --Werror *.cpp *.h > formattingReport.txt
+          clang-format -n --Werror noSuchFile > noSuchFileExample.txt
+          clang-format -n --Werror noSuchFile noSuchFile > doubleNoSuchFileExample.txt
+    - run: |
+        if [[ "$(cat formattingReport.txt)" != "$(cat noSuchFileExample.txt)" && "$(cat formattingReport.txt)" != "$(cat doubleNoSuchFileExample.txt)" ]]; then
+          exit 1
+        fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
     - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}'
