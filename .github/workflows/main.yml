@@ -12,15 +12,14 @@ jobs:
         version: "14.0"
     - run: |
         clang-format --style=file -n --Werror *.cpp *.h &> formattingReport.txt || true
+        FORMATTING_REPORT="$(cat formattingReport.txt)"
         clang-format -n --Werror noSuchFile &> noSuchFileExample.txt || true
+        NO_SUCH_FILE_EXAMPLE="$(cat noSuchFileExample.txt)"
         clang-format -n --Werror noSuchFile noSuchFile &> doubleNoSuchFileExample.txt || true
-        echo newLine
-        echo newLine
-        cat noSuchFileExample.txt
-        echo newLine
-        cat doubleNoSuchFileExample.txt
-        echo newLine
-        cat formattingReport.txt
+        DOUBLE_NO_SUCH_FILE_EXAMPLE="$(cat doubleNoSuchFileExample.txt)"
+        if [[ FORMATTING_REPORT != NO_SUCH_FILE_EXAMPLE && FORMATTING_REPORT != DOUBLE_NO_SUCH_FILE_EXAMPLE ]]; then
+          exit 1
+        fi
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
     - run: wc -l ast.txt | awk '{print "Current complexity:",$1;}'
