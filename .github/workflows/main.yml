@@ -16,6 +16,7 @@ jobs:
         echo $FORMATTING_REPORT
         clang-format -n --Werror noSuchFile &> noSuchFileExample.txt || true
         NO_SUCH_FILE_EXAMPLE="$(cat noSuchFileExample.txt)"
+        echo $NO_SUCH_FILE_EXAMPLE
         clang-format -n --Werror noSuchFile noSuchFile &> doubleNoSuchFileExample.txt || true
         DOUBLE_NO_SUCH_FILE_EXAMPLE="$(cat doubleNoSuchFileExample.txt)"
         if [[ FORMATTING_REPORT != NO_SUCH_FILE_EXAMPLE && FORMATTING_REPORT != DOUBLE_NO_SUCH_FILE_EXAMPLE ]]; then
