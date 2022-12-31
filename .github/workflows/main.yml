@@ -12,7 +12,7 @@ jobs:
         version: "14.0"
     - name: Check formating of changes
       run: |
-          clang-format --style=file -n --Werror *.cpp *.h > formattingReport.txt
+          clang-format --style=file -n *.cpp *.h > formattingReport.txt
           exit 0
           if [[ $A != "$(clang-format -n -Werror noSuchFile)" && $A != "$(clang-format -n -Werror noSuchFile noSuchFile)" ]]; then
             exit 1
