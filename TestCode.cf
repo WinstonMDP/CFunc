@@ -1,3 +1,0 @@
-cash = value . number ;
-
-print cash ;
