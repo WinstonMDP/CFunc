@@ -16,7 +16,7 @@ jobs:
           clang-format -n --Werror noSuchFile > noSuchFileExample.txt
           clang-format -n --Werror noSuchFile noSuchFile > doubleNoSuchFileExample.txt
     - run: |
-        if [[ "$(cat formattingReport.txt)" != "$(cat noSuchFileExample.txt)" && "$(cat formattingReport.txt)" != "$(cat doubleNoSuchFileExample.txt)" ]]; then
+        if [[ "$(cat formattingReport.txt)" -ne "$(cat noSuchFileExample.txt)" && "$(cat formattingReport.txt)" -ne "$(cat doubleNoSuchFileExample.txt)" ]]; then
           exit 1
         fi
     - name: Write AST to ast.txt
