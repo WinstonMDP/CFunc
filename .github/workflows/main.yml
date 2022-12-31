@@ -5,6 +5,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.5.0
+      uses: actions/checkout@v2.6.0
+    - name: Install LLVM and Clang
+      uses: KyleMayes/install-llvm-action@v1.6.0
       with:
-        fetch-depth: 2
+        version: "14.0"
+    - name: Check formatting
+      run: |
+        clang-format --style=file -n --Werror *.cpp *.h &> formattingReport.txt || true
+        FORMATTING_REPORT="$(cat formattingReport.txt)"
+        cat formattingReport.txt
+        clang-format -n --Werror noSuchFile &> noSuchFileExample.txt || true
+        NO_SUCH_FILE_EXAMPLE="$(cat noSuchFileExample.txt)"
+        clang-format -n --Werror noSuchFile noSuchFile &> doubleNoSuchFileExample.txt || true
+        DOUBLE_NO_SUCH_FILE_EXAMPLE="$(cat doubleNoSuchFileExample.txt)"
+        if [[ $FORMATTING_REPORT != $NO_SUCH_FILE_EXAMPLE && $FORMATTING_REPORT != $DOUBLE_NO_SUCH_FILE_EXAMPLE ]]; then
+          exit 1
+        fi
+    - name: Compute code complexity
+      run: |
+        clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
+        wc -l ast.txt | awk '{print "Current code complexity:",$1;}'
