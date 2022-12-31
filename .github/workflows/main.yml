@@ -19,7 +19,6 @@ jobs:
     - name: Check formating of changes
       run: |
           FORMATTING_REPORT="$(clang-format -n -Werror *.cpp *.h)"
-          echo "${FORMATTING_REPORT}"
           clang-format -n -Werror noSuchFile noSuchFile
           if [[ $FORMATTING_REPORT != "$(clang-format -n -Werror noSuchFile)" && $FORMATTING_REPORT != "$(clang-format -n -Werror noSuchFile noSuchFile)" ]]; then
             exit 1
