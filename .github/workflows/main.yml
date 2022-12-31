@@ -11,9 +11,9 @@ jobs:
       with:
         version: "14.0"
     - run: |
-        clang-format --style=file -n --Werror *.cpp *.h > formattingReport.txt || true
-        clang-format -n --Werror noSuchFile > noSuchFileExample.txt || true
-        clang-format -n --Werror noSuchFile noSuchFile > doubleNoSuchFileExample.txt || true
+        clang-format --style=file -n --Werror *.cpp *.h &> formattingReport.txt || true
+        clang-format -n --Werror noSuchFile &> noSuchFileExample.txt || true
+        clang-format -n --Werror noSuchFile noSuchFile &> doubleNoSuchFileExample.txt || true
         echo newLine
         echo newLine
         cat noSuchFileExample.txt
