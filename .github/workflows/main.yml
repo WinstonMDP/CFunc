@@ -18,7 +18,7 @@ jobs:
         git config --global --path clangFormat.stylePath .clang-format
     - name: Check formating of changes
       run: |
-          FORMATTING_REPORT="$(clang-format -Werror *.cpp *.h)"
+          FORMATTING_REPORT="$(clang-format -n -Werror *.cpp *.h)"
           echo "${FORMATTING_REPORT}"
           if [[ $FORMATTING_REPORT != "invalid argument\ninvalid argument" && $FORMATTING_REPORT != "invalid argument" ]]; then
             exit 1
