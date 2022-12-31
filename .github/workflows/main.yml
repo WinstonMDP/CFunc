@@ -14,12 +14,12 @@ jobs:
         clang-format --style=file -n --Werror *.cpp *.h > formattingReport.txt || true
         clang-format -n --Werror noSuchFile > noSuchFileExample.txt || true
         clang-format -n --Werror noSuchFile noSuchFile > doubleNoSuchFileExample.txt || true
-        echo \n
-        echo \n
+        echo newLine
+        echo newLine
         cat noSuchFileExample.txt
-        echo \n
+        echo newLine
         cat doubleNoSuchFileExample.txt
-        echo \n
+        echo newLine
         cat formattingReport.txt
     - name: Write AST to ast.txt
       run: clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
