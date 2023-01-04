@@ -2,5 +2,5 @@
 
 int main()
 {
-    eturn 0;
+    return 0;
 }
