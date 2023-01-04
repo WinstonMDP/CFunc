@@ -22,6 +22,8 @@ jobs:
         if [[ $FORMATTING_REPORT != $NO_SUCH_FILE_EXAMPLE && $FORMATTING_REPORT != $DOUBLE_NO_SUCH_FILE_EXAMPLE ]]; then
           exit 1
         fi
+    - name: Check code compilability
+      run: clang Main.cpp
     - name: Compute code complexity
       run: |
         clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
