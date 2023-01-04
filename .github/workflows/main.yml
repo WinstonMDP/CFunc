@@ -23,7 +23,7 @@ jobs:
           exit 1
         fi
     - name: Check code compilability
-      run: clang Main.cpp
+      run: clang++ --std=c++14 Main.cpp
     - name: Compute code complexity
       run: |
         clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
