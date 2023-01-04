@@ -10,7 +10,7 @@ jobs:
       uses: KyleMayes/install-llvm-action@v1.6.0
       with:
         version: "14.0"
-    - name: Check formatting
+    - name: Check code formatting
       run: |
         clang-format --style=file -n --Werror *.cpp *.h &> formattingReport.txt || true
         FORMATTING_REPORT="$(cat formattingReport.txt)"
@@ -22,6 +22,10 @@ jobs:
         if [[ $FORMATTING_REPORT != $NO_SUCH_FILE_EXAMPLE && $FORMATTING_REPORT != $DOUBLE_NO_SUCH_FILE_EXAMPLE ]]; then
           exit 1
         fi
+    - name: Check code compilability
+      run: clang++ --std=c++14 Main.cpp
+    - name: Check code linting
+      run: clang-tidy Main.cpp
     - name: Compute code complexity
       run: |
         clang++ -Xclang -ast-dump -fsyntax-only Main.cpp > ast.txt || true
